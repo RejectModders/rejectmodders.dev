@@ -1,24 +1,19 @@
 // friends
-export const friendsHeadLine = "RejectModders Friends"
+export const friendsHeadLine = "Corey' friends"
 export const friendsIntro = "Meet some interesting friends."
+
 
 // friends
 export type FriendItemType = {
   name: string
   description?: string
   link: { href: string, label?: string }
-  image: string 
+  logo?: string
 }
 
 export const friends: Array<FriendItemType> = [
   {
     name: 'Corey Chiu',
     link: { href: 'https://coreychiu.com' },
-    image: 'corey-chiu.jpg',
-  },
-  {
-    name: 'RejectModders',
-    link: { href: 'https://pornhub.com' },
-    image: 'rejectmodders.gif',
   },
 ]
