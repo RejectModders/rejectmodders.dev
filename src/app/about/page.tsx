@@ -14,7 +14,7 @@ import SocialLinks from '@/components/about/SocialLinks'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'I’m Spencer Sharp. I live in New York City, where I design the future.',
+    'I’m RejectModders. I live in Missouri, United States, where I make projects for fun.',
 }
 
 export default function About() {
