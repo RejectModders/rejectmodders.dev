@@ -3,19 +3,20 @@ export * from './friends'
 
 
 // personal info
-export const name = 'Corey Chiu'
-export const headline = 'Software engineer, Full-Stack web developer, and indie hacker.'
-export const introduction = 'I’m Corey, a software engineer based in Shenzhen, China. I like coding, and building interesting things'
-export const email = 'xxx@gmail.com'
-export const githubUsername = 'iamcorey'
+export const name = 'RejectModders'
+export const headline = 'Python Developer, Web Developer, and Chill Dude. 😎'
+export const introduction = 'I’m RejectModders, I like coding and learning new things everyday!'
+export const email = 'rejectmodders@disutils.com'
+export const githubUsername = 'RejectModders'
 
 // about page
-export const aboutMeHeadline = "I'm Corey Chiu, a software engineer based in Shenzhen, China."
+export const aboutMeHeadline = "I'm RejectModdders, a Python Developer based in Missouri, United States."
 export const aboutParagraphs = [
-  "I love coding. I learned programming when I in college. I wrote my first program in Java when I was 18.",
-  "I have a lot of hobbies, such as travelling, photography, watching movies, music and so on.",
-  "I'm working as a software develop engineer in Shenzhen, China now. And I'm building a lot of side projects in my spare time."
-]
+  "I love coding. I learned programming when I was around 14-15. My first project was in Python, and I've been hooked ever since.",
+  "I have a variety of hobbies, watching movies, listening to music, and just exploring new things.",
+  "Currently, I'm working on Disutils Team and helping out in Ignited Hosting."
+];
+
 
 
 // social links
@@ -28,40 +29,15 @@ export type SocialLinkType = {
 
 export const socialLinks: Array<SocialLinkType> = [
   {
-    name: 'X',
-    icon: 'x',
-    href: 'https://x.com/realcoreychiu'
-  },
-  {
-    name: 'Bsky',
-    icon: 'bsky',
-    href: 'https://bsky.app/profile/coreychiu.com'
-  },
-  {
-    name: 'Jike',
-    icon: 'pill',
-    href: 'https://okjk.co/P7c1zU'
-  },
-  {
     name: 'Github',
     icon: 'github',
-    href: 'https://github.com/iamcorey'
-  },
-  {
-    name: 'Wechat',
-    icon: 'wechat',
-    href: 'https://mp.weixin.qq.com/s/DxnRgqNfgzXIhqj6w_x0dQ'
+    href: 'https://github.com/RejectModders'
   },
   {
     name: 'Discord',
     icon: 'discord',
-    href: 'https://discord.gg/xTxRg3Ej'
+    href: 'https://discord.gg/28RuT8WsKT'
   },
-  {
-    name: 'Ko-fi',
-    icon: 'coffee',
-    href: 'https://ko-fi.com/coreychiu'
-  }
 ]
 
 // https://simpleicons.org/
