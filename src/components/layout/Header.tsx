@@ -369,7 +369,7 @@ export function Header() {
                     >
                       Hi, {' '}
                       <TypingAnimation
-                        className="text-3xl md:text-6xl font-bold tracking-tight"
+                        className="text-2xl md:text-4xl font-bold tracking-tight ml-2"
                         text={`I'm ${name} `}
                         duration={150}
                       />
