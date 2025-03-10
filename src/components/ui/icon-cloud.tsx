@@ -1,10 +1,10 @@
 "use client";
 
-import * as simpleIcons from 'simple-icons';
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import {
   Cloud,
+  fetchSimpleIcons,
   ICloud,
   renderSimpleIcon,
   SimpleIcon,
@@ -33,18 +33,19 @@ export const cloudProps: Omit<ICloud, "children"> = {
     outlineColour: "#0000",
     maxSpeed: 0.04,
     minSpeed: 0.02,
+    // dragControl: false,
   },
 };
 
 export const renderCustomIcon = (icon: SimpleIcon, theme: string) => {
   const bgHex = theme === "light" ? "#f3f2ef" : "#080510";
-  const iconColor = icon.hex ? `#${icon.hex}` : (theme === "light" ? "#6e6e73" : "#ffffff"); 
+  const fallbackHex = theme === "light" ? "#6e6e73" : "#ffffff";
   const minContrastRatio = theme === "dark" ? 2 : 1.2;
 
   return renderSimpleIcon({
     icon,
     bgHex,
-    fallbackHex: iconColor,  
+    fallbackHex,
     minContrastRatio,
     size: 42,
     aProps: {
@@ -60,18 +61,23 @@ export type DynamicCloudProps = {
   iconSlugs: string[];
 };
 
+type IconData = Awaited<ReturnType<typeof fetchSimpleIcons>>;
+
 export default function IconCloud({ iconSlugs }: DynamicCloudProps) {
-  const [icons, setIcons] = useState<SimpleIcon[]>([]);
+  const [data, setData] = useState<IconData | null>(null);
   const { theme } = useTheme();
 
   useEffect(() => {
-    const filteredIcons = iconSlugs.map(slug => simpleIcons[slug.toUpperCase().replace(/-/g, "")] || null).filter(Boolean);
-    setIcons(filteredIcons);
+    fetchSimpleIcons({ slugs: iconSlugs }).then(setData);
   }, [iconSlugs]);
 
   const renderedIcons = useMemo(() => {
-    return icons.map((icon) => renderCustomIcon(icon, theme || "light"));
-  }, [icons, theme]);
+    if (!data) return null;
+
+    return Object.values(data.simpleIcons).map((icon) =>
+      renderCustomIcon(icon, theme || "light"),
+    );
+  }, [data, theme]);
 
   return (
     // @ts-ignore
