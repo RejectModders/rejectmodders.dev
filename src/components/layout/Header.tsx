@@ -372,7 +372,7 @@ export function Header() {
                         text={`Hi, I'm ${name}`}
                         duration={150}
                       />
-                      <span className="text-2xl md:text-5xl">👋</span>
+                      <span className="text-2xl md:text-4xl">👋</span>
                     </div>
                   </div>
                 </div>
