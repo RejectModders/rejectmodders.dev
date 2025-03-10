@@ -77,24 +77,6 @@ export default async function Home() {
             ))}
           </ul>
         </div>
-        <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-          {/* left column */}
-          {/* blog */}
-          <div className="flex flex-col gap-16">
-            {blogList.map((blog: BlogType) => (
-              <BlogCard key={blog.slug} blog={blog} titleAs='h3'/>
-            ))}
-          </div>
-
-          {/* right column */}
-          <div className="space-y-10 lg:pl-16 xl:pl-24">
-            <Career />
-            <Education />
-
-            {/* <Newsletter /> */}
-            <Feed />
-          </div>
-        </div>
       </Container>
     </>
   )
