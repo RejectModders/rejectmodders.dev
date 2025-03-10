@@ -21,31 +21,29 @@ export type ProjectItemType = {
     {
       name: 'Disutils Team',
       description:
-        'Showcase your GitHub contributions into stunning visual cards.',
+        'A dedicated group of individuals committed to enhancing and simplifying the Discord experience for all users.',
       link: { href: 'disutils.com', label: 'Disutils Team' },
       category: ['Website'],
       techStack: ['Next.js', 'TailwindCSS', 'Shadcn/UI'],
       tags: ['Discord Bots', 'Custom Bots']
     },
     {
-      name: 'AI Best Tools',
+      name: 'Is It Pink?',
       description:
-        'Find the best AI tools in AIBest.tools',
-      link: { href: 'aibest.tools', label: 'AI Best Tools' },
-      logo: '/images/icon/aibesttools.png',
+        'A kids game I made for the fun of it.',
+      link: { href: 'is-it.pink', label: 'Is It Pink?' },
       category: ['Website'],
       techStack: ['Next.js', 'TailwindCSS', 'Shadcn/UI'],
-      tags: ['AI', 'Tools Directory']
+      tags: ['Game', 'Kids Game']
     },
     {
-      name: 'Best Directories',
+      name: 'Public CDN',
       description:
-        'Your ultimate directory of directories.',
-      link: { href: 'bestdirectories.org', label: 'Best Directories' },
-      logo: '/images/icon/bestdirectories.png',
+        'Best public CDN for free.',
+      link: { href: 'cdn.is-it.pink', label: 'Best Directories' },
       category: ['Website'],
       techStack: ['Next.js', 'TailwindCSS', 'Shadcn/UI'],
-      tags: ['Directory of Directories']
+      tags: ['CDN', 'Image Host']
     },
     {
       name: 'User Growth',
