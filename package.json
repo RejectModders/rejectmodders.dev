@@ -33,7 +33,6 @@
     "fast-glob": "^3.3.2",
     "favicon-stealer": "^1.2.0",
     "feed": "^4.2.2",
-    "google": "link:@next/third-parties/google",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.460.0",
     "next": "^14.2.18",
@@ -51,7 +50,7 @@
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.6.3",
-    "simple-icons": "^12.13.0"
+    "simple-icons": "^14.10.0"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
