@@ -1,5 +1,5 @@
 // friends
-export const friendsHeadLine = "RejectModders Friends"
+export const friendsHeadLine = "My closest friends!"
 export const friendsIntro = "Meet some interesting friends."
 
 
