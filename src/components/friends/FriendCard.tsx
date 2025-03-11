@@ -7,14 +7,14 @@ import { FriendItemType } from '@/config/infoConfig'
 import { utm_source } from '@/config/siteConfig'
 import Link from 'next/link'
 
-
 import { useState } from 'react'
 
 export function FriendCard({ friend, titleAs }: { friend: FriendItemType, titleAs?: keyof JSX.IntrinsicElements }) {
   const utmLink = `${friend.link.href}?utm_source=${utm_source}`
   let Component = titleAs ?? 'h2'
 
-  const [logoSrc, setLogoSrc] = useState(friend.logo ?? `https://icons.duckduckgo.com/ip3/${new URL(friend.link.href).hostname}.ico`)
+  const defaultLogoPath = `/images/friends/${friend.name.replace(/\s+/g, '-').toLowerCase()}.png`
+  const [logoSrc, setLogoSrc] = useState(friend.logo ?? defaultLogoPath)
 
   const handleError = () => {
     setLogoSrc(`https://icons.duckduckgo.com/ip3/${new URL(friend.link.href).hostname}.ico`)
