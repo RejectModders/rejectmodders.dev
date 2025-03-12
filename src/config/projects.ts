@@ -78,7 +78,7 @@ export type ProjectItemType = {
       name: 'Is It Pink?',
       description:
         'A kids game I made for the fun of it.',
-      link: { href: 'github.com/disutils/is-it.pink', label: 'Is It Pink?' },
+      link: { href: 'github.com/disutils/is-it.pink', label: 'randomstuffhere' },
       gitStars: 0,
       gitForks: 0
     },
