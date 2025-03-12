@@ -68,7 +68,8 @@ export type ProjectItemType = {
   export const githubProjects: Array<ProjectItemType> = [
     {
       name: 'disckit',
-      description: 'An open source utilities library for the disutils bots.',
+      description:
+        'An open source utilities library for the disutils bots.',
       link: { href: 'github.com/disutils/disckit', label: 'disckit' },
       gitStars: 1,
       gitForks: 0
