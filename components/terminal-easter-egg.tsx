@@ -38,7 +38,7 @@ const LOGO_LINES: Line[] = [
 const BOOT_LINES: Line[] = [
   ...LOGO_LINES,
   L("Initializing shell...", col.green),
-  L("Loaded 100 commands. Type 'help' to list them.", col.muted),
+  L("Loaded 150+ commands. Type 'help' for page 1 of 11, 'help 2' for page 2, etc.", col.muted),
   L("Pro tip: use Tab to autocomplete, ↑/↓ for history.", col.muted),
   BR(),
 ]
@@ -95,111 +95,223 @@ const ALL_CMDS = [
   "sudo please","sudo make me a sandwich",
   ":(){ :|:& };:","while true","for i in","exit 1",
   "motd","banner2","figlet","toilet",
+  // linux extended
+  "cat /etc/passwd","cat /etc/os-release","cat /proc/cpuinfo","cat /proc/meminfo",
+  "cat /etc/hosts","cat /etc/motd","cat .bashrc","cat /home/rm/todo.txt",
+  "ls /","ls /home","ls /home/rm",
+  "ps aux","htop","kill","killall","lsof","strace","tee","wc","sort","uniq","diff","find","grep",
+  "ip addr","ss","iptables","ufw","curl ifconfig.me","openssl","ssh-keygen","gpg",
+  "git stash","git branch","git diff","git log --oneline","git clone",
+  "sudo apt install","apt","npm install","brew","docker",
+  "which","type","alias","export","source","md5sum","sha256sum","lsblk","mount",
+  "python3","python","node","tmux","crontab","watch","id","groups","last","w","who",
+  "sudo please","sudo make me a sandwich","sudo please make me a sandwich",
+  "help --all",
 ]
+
+// ── Help paginator ────────────────────────────────────────────────────────────
+const HELP_PAGES: { title: string; rows: [string, string][] }[] = [
+  { title: "SITE & INFO", rows: [
+    ["whoami",             "who is running this"],
+    ["ls / ls -la",        "list site pages"],
+    ["pwd",                "print working directory"],
+    ["cat about",          "read about.md"],
+    ["cat readme",         "site readme"],
+    ["cat vulnradar",      "VulnRadar info"],
+    ["skills",             "skill levels"],
+    ["links",              "social / contact links"],
+    ["projects",           "pinned projects"],
+    ["friends",            "list friends"],
+    ["contact",            "how to reach me"],
+    ["spotify",            "now playing"],
+  ]},
+  { title: "SYSTEM", rows: [
+    ["date / cal",         "date & calendar"],
+    ["uname",              "system info"],
+    ["neofetch",           "system info (fancy)"],
+    ["top / ps / ps aux",  "processes"],
+    ["htop",               "interactive process viewer"],
+    ["df / free",          "disk & memory"],
+    ["ifconfig",           "network interfaces"],
+    ["env",                "environment variables"],
+    ["status / uptime",    "live site health"],
+    ["lsblk / mount",      "block devices & mounts"],
+    ["lsof",               "open files & sockets"],
+    ["id / groups",        "user & group info"],
+  ]},
+  { title: "FILE SYSTEM", rows: [
+    ["cat /etc/passwd",    "/etc/passwd"],
+    ["cat /etc/os-release","OS release info"],
+    ["cat /proc/cpuinfo",  "CPU info"],
+    ["cat /proc/meminfo",  "memory info"],
+    ["cat /etc/hosts",     "hosts file"],
+    ["cat /etc/motd",      "message of the day"],
+    ["cat .bashrc",        "bash config"],
+    ["cat /home/rm/todo",  "my todo list"],
+    ["ls /  ls /home",     "list directories"],
+    ["ls /home/rm",        "home directory"],
+    ["find [path]",        "find files"],
+    ["grep [pattern]",     "search in files"],
+  ]},
+  { title: "NETWORK", rows: [
+    ["ping",               "ping the server"],
+    ["curl",               "fetch site headers"],
+    ["whois",              "whois lookup"],
+    ["traceroute",         "trace the route"],
+    ["nmap",               "port scan"],
+    ["ssh",                "ssh into something"],
+    ["netstat",            "network connections"],
+    ["dig / nslookup",     "DNS lookup"],
+    ["myip",               "your public IP"],
+    ["ip addr",            "IP address info"],
+    ["ss",                 "socket stats"],
+    ["iptables / ufw",     "firewall rules"],
+  ]},
+  { title: "GIT & DEV", rows: [
+    ["git log",            "commit history"],
+    ["git log --oneline",  "compact history"],
+    ["git status",         "repo status"],
+    ["git diff",           "show changes"],
+    ["git branch",         "list branches"],
+    ["git stash",          "stash changes"],
+    ["git clone [url]",    "clone a repo"],
+    ["sudo apt install",   "install apt package"],
+    ["npm install [p]",    "install npm package"],
+    ["pip install [p]",    "install python pkg"],
+    ["brew [cmd]",         "Homebrew (macOS)"],
+    ["docker [cmd]",       "Docker"],
+  ]},
+  { title: "TOOLS & CRYPTO", rows: [
+    ["base64 [txt]",       "encode to base64"],
+    ["rot13 [txt]",        "rot13 encode/decode"],
+    ["morse [txt]",        "encode to morse"],
+    ["binary [txt]",       "encode to binary"],
+    ["hex [txt]",          "encode to hex"],
+    ["password",           "generate a password"],
+    ["uuid",               "generate a UUID"],
+    ["md5 [txt]",          "md5-ish hash"],
+    ["md5sum [txt]",       "md5 checksum"],
+    ["sha256sum [txt]",    "sha256 checksum"],
+    ["openssl [cmd]",      "OpenSSL operations"],
+    ["gpg / ssh-keygen",   "key operations"],
+  ]},
+  { title: "PROCESS & SCHEDULING", rows: [
+    ["kill [pid]",         "send SIGTERM to PID"],
+    ["killall [name]",     "kill by name"],
+    ["watch [cmd]",        "repeat command"],
+    ["crontab",            "cron jobs"],
+    ["tmux",               "terminal multiplexer"],
+    ["strace [cmd]",       "trace system calls"],
+    ["last / w / who",     "logged in users"],
+    ["history",            "command history"],
+    ["alias",              "shell aliases"],
+    ["export [k=v]",       "set env var"],
+    ["source [file]",      "source a file"],
+    ["which / type",       "find a command path"],
+  ]},
+  { title: "GAMES & FUN", rows: [
+    ["dice [N]",           "roll N dice"],
+    ["coinflip",           "flip a coin"],
+    ["rps [choice]",       "rock paper scissors"],
+    ["2048 / snake / doom","classic games (jk)"],
+    ["hack",               "..."],
+    ["matrix / cmatrix",   "go deeper"],
+    ["rick",               "never gonna give you up"],
+    ["doge",               "wow. such terminal."],
+    ["nyan",               "nyan cat"],
+    ["parrot",             "party parrot"],
+    ["sl",                 "steam locomotive"],
+    ["yes",                "yes yes yes yes yes"],
+  ]},
+  { title: "FUN & MISC", rows: [
+    ["cowsay",             "a cow says something"],
+    ["fortune",            "random fortune"],
+    ["joke",               "programming joke"],
+    ["quote",              "inspirational quote"],
+    ["weather",            "weather report"],
+    ["lolcat",             "rainbow text"],
+    ["shrug / tableflip",  "emoticons"],
+    ["whoishiring",        "who's hiring in sec"],
+    ["ascii / banner",     "ASCII art"],
+    ["cat amanda.txt",     "♥"],
+    ["cursor <color>",     "change cursor color"],
+    ["theme <dark|light>", "toggle site theme"],
+  ]},
+  { title: "EDITORS & SHELL", rows: [
+    ["vim",                "you can never leave"],
+    ["nano",               "the sensible choice"],
+    ["emacs",              "an OS with a text editor"],
+    ["python3 / python",   "Python REPL-ish"],
+    ["node",               "Node.js REPL-ish"],
+    ["man [cmd]",          "manual page"],
+    ["touch [file]",       "make a new file"],
+    ["wc / sort / uniq",   "text utilities"],
+    ["diff / tee",         "diff & redirect"],
+    ["head / tail",        "file head/tail"],
+    ["chmod / su / passwd","permissions & auth"],
+    ["sudo please",        "ask nicely"],
+  ]},
+  { title: "SYSTEM OPS & EASTER EGGS", rows: [
+    ["reboot / shutdown",        "restart / power off"],
+    ["rm -rf /",                 "please don't"],
+    [":(){ :|:& };:",            "fork bomb (jk)"],
+    ["sudo make me a sandwich",  "make it yourself"],
+    ["sudo please make...",      "okay.  🥪"],
+    ["cat secrets.txt",          "nice try"],
+    ["sudo cat secrets.txt",     "spoilers inside"],
+    ["env",                      "find the CTF flag"],
+    ["fullscreen / minimize",    "window controls"],
+    ["echo [text]",              "echo text"],
+    ["clear",                    "clear terminal"],
+    ["exit",                     "close terminal"],
+  ]},
+]
+
+const HELP_TOTAL = HELP_PAGES.length  // 11
+
+function buildHelpPage(page: number): Line[] {
+  const p   = Math.max(1, Math.min(page, HELP_TOTAL))
+  const { title, rows } = HELP_PAGES[p - 1]
+  // columns: cmd=22 chars, desc=28 chars  → total inner = 22+3+28 = 53
+  const C = 22, D = 28
+  const border  = "─".repeat(C + 2)
+  const border2 = "─".repeat(D + 2)
+  const hdr = ` pg ${String(p).padStart(2)}/${HELP_TOTAL} · ${title}`
+  const hdrPad = hdr.padEnd(C + 2)
+  const nav = ` 'help <n>' for any page`
+  const navPad = nav.padEnd(D + 2)
+  const out: Line[] = [
+    L(`┌${border}┬${border2}┐`, col.primary),
+    L(`│${hdrPad}│${navPad}│`, col.primary),
+    L(`├${"─".repeat(C + 2)}┼${"─".repeat(D + 2)}┤`, col.primary),
+    L(`│ ${"command".padEnd(C)} │ ${"description".padEnd(D)} │`, col.muted),
+    L(`├${"─".repeat(C + 2)}┼${"─".repeat(D + 2)}┤`, col.primary),
+  ]
+  for (const [cmd, desc] of rows) {
+    const c = cmd.length  > C ? cmd.slice(0, C - 1) + "…" : cmd.padEnd(C)
+    const d = desc.length > D ? desc.slice(0, D - 1) + "…" : desc.padEnd(D)
+    out.push(L(`│ ${c} │ ${d} │`, col.fg))
+  }
+  out.push(L(`└${border}┴${border2}┘`, col.primary))
+  out.push(BR())
+  if (p < HELP_TOTAL) {
+    out.push(L(`  ▶  help ${p + 1}  →  next page   (${HELP_TOTAL - p} remaining)`, col.cyan))
+  } else {
+    out.push(L(`  ✓  all ${HELP_TOTAL} pages complete — help 1 to restart`, col.green))
+  }
+  out.push(L(`  ▶  help --all  →  full linux command list`, col.muted))
+  out.push(BR())
+  return out
+}
 
 // ── Command map (sync) ────────────────────────────────────────────────────────
 const COMMANDS: Record<string, (args?: string) => Line[]> = {
-  help: () => [
-    L("┌────────────────┬────────────────────────────────┐", col.primary),
-    L("│ command        │ description                    │", col.primary),
-    L("├────────────────┼────────────────────────────────┤", col.primary),
-    L("│ -- SITE ──────────────────────────────────────── │", col.muted),
-    L("│ whoami         │ who is running this            │", col.fg),
-    L("│ ls / ls -la    │ list site pages                │", col.fg),
-    L("│ cat about      │ read about.md                  │", col.fg),
-    L("│ cat readme     │ site readme                    │", col.fg),
-    L("│ cat vulnradar  │ vulnradar info                 │", col.fg),
-    L("│ skills         │ skill levels                   │", col.fg),
-    L("│ links          │ social / contact links         │", col.fg),
-    L("│ projects       │ pinned projects                │", col.fg),
-    L("│ friends        │ list friends                   │", col.fg),
-    L("│ contact        │ how to reach me                │", col.fg),
-    L("│ spotify        │ now playing                    │", col.fg),
-    L("│ -- SYSTEM ────────────────────────────────────── │", col.muted),
-    L("│ date / cal     │ date & calendar                │", col.fg),
-    L("│ uname          │ system info                    │", col.fg),
-    L("│ neofetch       │ system info (fancy)            │", col.fg),
-    L("│ top / ps       │ processes                      │", col.fg),
-    L("│ df / free      │ disk & memory                  │", col.fg),
-    L("│ ifconfig       │ network interfaces             │", col.fg),
-    L("│ env            │ environment variables          │", col.fg),
-    L("│ status / uptime│ live site health               │", col.fg),
-    L("│ -- NETWORK ───────────────────────────────────── │", col.muted),
-    L("│ ping           │ ping the server                │", col.fg),
-    L("│ curl           │ fetch site headers             │", col.fg),
-    L("│ whois          │ whois lookup                   │", col.fg),
-    L("│ traceroute     │ trace the route                │", col.fg),
-    L("│ nmap           │ port scan                      │", col.fg),
-    L("│ ssh            │ ssh into something             │", col.fg),
-    L("│ netstat        │ network connections            │", col.fg),
-    L("│ dig            │ dns lookup                     │", col.fg),
-    L("│ myip           │ your public IP                 │", col.fg),
-    L("│ -- GIT ───────────────────────────────────────── │", col.muted),
-    L("│ git log        │ commit history                 │", col.fg),
-    L("│ git status     │ repo status                    │", col.fg),
-    L("│ git diff       │ show changes                   │", col.fg),
-    L("│ git branch     │ list branches                  │", col.fg),
-    L("│ -- TOOLS ─────────────────────────────────────── │", col.muted),
-    L("│ base64 [txt]   │ encode to base64               │", col.fg),
-    L("│ rot13 [txt]    │ rot13 encode/decode            │", col.fg),
-    L("│ morse [txt]    │ encode to morse code           │", col.fg),
-    L("│ binary [txt]   │ encode to binary               │", col.fg),
-    L("│ hex [txt]      │ encode to hex                  │", col.fg),
-    L("│ password       │ generate a password            │", col.fg),
-    L("│ uuid           │ generate a uuid                │", col.fg),
-    L("│ md5 [txt]      │ md5-ish hash                   │", col.fg),
-    L("│ -- GAMES ─────────────────────────────────────── │", col.muted),
-    L("│ dice [N]       │ roll N dice                    │", col.fg),
-    L("│ coinflip       │ flip a coin                    │", col.fg),
-    L("│ rps [choice]   │ rock paper scissors            │", col.fg),
-    L("│ 2048           │ play 2048 (jk)                 │", col.fg),
-    L("│ snake          │ play snake (jk)                │", col.fg),
-    L("│ doom           │ it runs doom                   │", col.fg),
-    L("│ -- FUN ───────────────────────────────────────── │", col.muted),
-    L("│ hack           │ ...                            │", col.fg),
-    L("│ matrix         │ go deeper                      │", col.fg),
-    L("│ cmatrix        │ the real matrix                │", col.fg),
-    L("│ rick           │ never gonna give you up        │", col.fg),
-    L("│ doge           │ wow. such terminal.            │", col.fg),
-    L("│ nyan           │ nyan cat                       │", col.fg),
-    L("│ parrot         │ party parrot                   │", col.fg),
-    L("│ ascii          │ print logo                     │", col.fg),
-    L("│ banner         │ big text banner                │", col.fg),
-    L("│ cowsay         │ a cow says something           │", col.fg),
-    L("│ fortune        │ random fortune                 │", col.fg),
-    L("│ joke           │ programming joke               │", col.fg),
-    L("│ quote          │ inspirational quote            │", col.fg),
-    L("│ weather        │ weather report                 │", col.fg),
-    L("│ lolcat         │ rainbow text                   │", col.fg),
-    L("│ yes            │ yes                            │", col.fg),
-    L("│ sl             │ steam locomotive               │", col.fg),
-    L("│ shrug          │ shrug emoticon                 │", col.fg),
-    L("│ tableflip      │ flip a table                   │", col.fg),
-    L("│ unflip         │ put it back                    │", col.fg),
-    L("│ whoishiring    │ whos hiring in sec             │", col.fg),
-    L("│ -- EDITORS ───────────────────────────────────── │", col.muted),
-    L("│ vim            │ you can never leave            │", col.fg),
-    L("│ nano           │ the sensible choice            │", col.fg),
-    L("│ emacs          │ an OS with a text editor       │", col.fg),
-    L("│ -- SYSTEM OPS ────────────────────────────────── │", col.muted),
-    L("│ man [cmd]      │ manual page                    │", col.fg),
-    L("│ touch [file]   │ make a new file                │", col.fg),
-    L("│ reboot         │ restart the site               │", col.fg),
-    L("│ shutdown       │ turn it all off                │", col.fg),
-    L("│ :(){ :|:& };:  │ fork bomb (jk)                 │", col.fg),
-    L("│ sudo [cmd]     │ try your luck                  │", col.fg),
-    L("│ rm -rf /       │ please don't                   │", col.fg),
-    L("│ -- TERMINAL ──────────────────────────────────── │", col.muted),
-    L("│ fullscreen     │ toggle fullscreen              │", col.fg),
-    L("│ history        │ command history                │", col.fg),
-    L("│ echo [text]    │ echo text back                 │", col.fg),
-    L("│ clear          │ clear terminal                 │", col.fg),
-    L("│ exit           │ close terminal                 │", col.fg),
-    L("└────────────────┴────────────────────────────────┘", col.primary),
-    BR(),
-    L("Tip: drag the title bar to move • click ⛶ to fullscreen", col.muted),
-    BR(),
-  ],
+  help: (args) => {
+    const raw = (args ?? "").replace(/^help\s*/i, "").trim()
+    if (raw === "--all") return COMMANDS["help --all"]!()
+    const n = raw === "" ? 1 : parseInt(raw, 10)
+    return buildHelpPage(isNaN(n) ? 1 : n)
+  },
 
   whoami: () => [
     L("uid=1000(rejectmodders) gid=1000(rejectmodders)", col.green),
@@ -1165,74 +1277,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     ]
   },
 
-  "git diff": () => [
-    L("diff --git a/components/terminal-easter-egg.tsx b/components/terminal-easter-egg.tsx", col.fg),
-    L("--- a/components/terminal-easter-egg.tsx", col.red),
-    L("+++ b/components/terminal-easter-egg.tsx", col.green),
-    L("@@ -1,3 +1,3 @@", col.cyan),
-    L("-  Loaded 50 commands.", col.red),
-    L("+  Loaded 100 commands.", col.green),
-    L("+  // added 50 more fun commands", col.green),
-    BR(),
-    L("1 file changed, 50 insertions(+), 1 deletion(-)", col.muted),
-    BR(),
-  ],
-
-  "git branch": () => [
-    L("* main", col.green),
-    L("  dev", col.fg),
-    L("  feat/more-terminal-cmds", col.fg),
-    L("  feat/draggable-terminal", col.fg),
-    L("  fix/help-table-alignment", col.muted),
-    BR(),
-  ],
-
-  rick: () => [
-    L("♪ Never gonna give you up", col.primary),
-    L("♪ Never gonna let you down", col.primary),
-    L("♪ Never gonna run around and desert you", col.primary),
-    L("♪ Never gonna make you cry", col.yellow),
-    L("♪ Never gonna say goodbye", col.yellow),
-    L("♪ Never gonna tell a lie and hurt you", col.yellow),
-    BR(),
-    L("You got rickrolled by a terminal. Congratulations.", col.muted),
-    BR(),
-  ],
-
-  doge: () => [
-    L("        ░░░░░░░░░░░░░░░░░░░░░░░░░░", col.yellow),
-    L("      such terminal   wow   very cmd", col.yellow),
-    L("   much hack          ░░░░  amaze", col.yellow),
-    L("        so security         wow", col.yellow),
-    L("              very konami code", col.yellow),
-    L("                  much easter egg", col.yellow),
-    L("          wow                  such doge", col.yellow),
-    BR(),
-  ],
-
-  nyan: () => [
-    L("+      +      +      +      +      +      +", col.muted),
-    L("   ▄▀▀▀▄  ████████████████", col.primary),
-    L("   █ owo █ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", col.primary),
-    L("   ▀▄▄▄▀  ████████████████", col.primary),
-    L("+      +      +      +      +      +      +", col.muted),
-    BR(),
-    L("~Nyan~Nyan~Nyan~Nyan~Nyan~Nyan~Nyan~Nyan~", col.cyan),
-    BR(),
-  ],
-
-  parrot: () => {
-    const frames = ["🦜", "🦜", "🦜"]
-    const colors = [col.red, col.yellow, col.green, col.cyan, col.primary]
-    const lines: Line[] = []
-    for (let i = 0; i < 5; i++) {
-      lines.push(L(`  ${frames[i % frames.length]}  PARTY PARROT IS HERE`, colors[i % colors.length]))
-    }
-    lines.push(BR())
-    lines.push(L("  🎉🎊🎉🎊🎉🎊🎉🎊🎉🎊🎉", col.yellow))
-    lines.push(BR())
-    return lines
-  },
 
   "2048": () => [
     L("┌──────┬──────┬──────┬──────┐", col.primary),
@@ -1293,90 +1337,15 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     BR(),
   ],
 
-  ":(){ :|:& };:": () => [
-    L("Executing fork bomb...", col.red),
-    L(":(){ :|:& };:", col.red),
-    BR(),
-    L("PID 1337: forked", col.red),
-    L("PID 1338: forked", col.red),
-    L("PID 1339: forked", col.red),
-    L("...", col.red),
-    L("kernel: fork table full!", col.red),
-    L("kernel: OOM killer activated!", col.red),
-    BR(),
-    L("Just kidding. It's a browser.", col.green),
-    L("Your tab is fine (probably).", col.muted),
-    BR(),
-  ],
-
-  "sudo make me a sandwich": () => [
-    L("Okay.", col.green),
-    BR(),
-    L("  🥪 One sandwich, made with root privileges.", col.fg),
-    BR(),
-  ],
-
-  "sudo please": () => [
-    L("sudo: That's not how this works.", col.red),
-    L("sudo: But points for politeness.", col.green),
-    BR(),
-  ],
-
-  motd: () => [
-    L("─────────────────────────────────────────────", col.primary),
-    L("  Welcome to rejectmodders.is-a.dev", col.fg),
-    BR(),
-    L("  \"Security is not a product, it's a process.\"", col.yellow),
-    L("                              — Bruce Schneier", col.muted),
-    BR(),
-    L("  System time: " + new Date().toLocaleString(), col.muted),
-    L("  Uptime:      forever (Vercel is based)", col.muted),
-    L("─────────────────────────────────────────────", col.primary),
-    BR(),
-  ],
-
-  id: () => [
-    L("uid=1000(rm) gid=1000(rm) groups=1000(rm),27(sudo),4(adm),1337(hackers)", col.green),
-    BR(),
-  ],
-
-  groups: () => [
-    L("rm sudo adm hackers developers security cool-people", col.green),
-    BR(),
-  ],
-
-  last: () => [
-    L("rm       pts/0        76.76.21.21    Sun Mar  1 00:00   still logged in", col.fg),
-    L("rm       pts/0        76.76.21.21    Sat Feb 28 23:00 - 00:00  (01:00)", col.fg),
-    L("reboot   system boot  6.x.x-edge     Sat Feb 28 22:55", col.muted),
-    BR(),
-    L("wtmp begins Sat Feb 28 22:55", col.muted),
-    BR(),
-  ],
-
-  w: () => [
-    L(" " + new Date().toLocaleTimeString() + " up forever,  1 user,  load average: 0.01, 0.01, 0.00", col.fg),
-    L("USER     TTY      FROM             LOGIN@   IDLE JCPU   PCPU WHAT", col.primary),
-    L("rm       pts/0    76.76.21.21      00:00    0.00s 0.00s  0.00s easter-egg", col.fg),
-    BR(),
-  ],
-
-  who: () => [
-    L("rm       pts/0        2026-03-01 00:00 (76.76.21.21)", col.fg),
-    BR(),
-  ],
 
   "cat secrets.txt": () => [
     L("cat: secrets.txt: Permission denied", col.red),
     BR(),
-    L("Nice try. Try sudo.", col.muted),
+    L("  hint: try 'sudo cat secrets.txt'", col.muted),
     BR(),
   ],
 
   "sudo cat secrets.txt": () => [
-    L("[sudo] password for rm: ", col.fg),
-    L("✓ authenticated", col.green),
-    BR(),
     L("# secrets.txt", col.primary),
     BR(),
     L("  1. The konami code opens this terminal.", col.fg),
@@ -1446,20 +1415,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     BR(),
   ],
 
-  "alias": () => [
-    L("alias ll='ls -la'", col.fg),
-    L("alias gs='git status'", col.fg),
-    L("alias gl='git log --oneline'", col.fg),
-    L("alias ..='cd ..'", col.fg),
-    L("alias please='sudo'", col.fg),
-    L("alias yeet='rm -rf'", col.red),
-    BR(),
-  ],
-
-  "which": (args) => {
-    const cmd = (args ?? "").replace(/^which\s*/i, "").trim() || "bash"
-    return [L(`/usr/bin/${cmd}`, col.green), BR()]
-  },
 
   "file": (args) => {
     const f = (args ?? "").replace(/^file\s*/i, "").trim() || "terminal-easter-egg.tsx"
@@ -1469,25 +1424,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     ]
   },
 
-  "wc": (args) => {
-    const f = (args ?? "").replace(/^wc\s*/i, "").trim() || "terminal-easter-egg.tsx"
-    return [
-      L(` 1214  4200  99999 ${f}`, col.fg),
-      BR(),
-    ]
-  },
-
-  "grep": (args) => {
-    const q = (args ?? "").replace(/^grep\s*/i, "").trim() || "easter"
-    return [
-      L(`grep: searching for '${q}'...`, col.muted),
-      L(`terminal-easter-egg.tsx:69:  // easter egg found at process 69`, col.green),
-      L(`terminal-easter-egg.tsx:420: // you're reading the source. nice.`, col.green),
-      BR(),
-      L("2 matches found.", col.muted),
-      BR(),
-    ]
-  },
 
   "head": () => [
     L('"use client"', col.fg),
@@ -1506,31 +1442,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     BR(),
     L("(last lines of terminal-easter-egg.tsx)", col.muted),
     L("(there's nothing secret down here)", col.muted),
-    BR(),
-  ],
-
-  "python": () => [
-    L("Python 3.12.0 (main, Oct  2 2023)", col.green),
-    L('Type "help", "copyright", "credits" or "license" for more information.', col.muted),
-    L(">>> ", col.fg),
-    L("(not a real Python shell — but RejectModders loves Python)", col.muted),
-    L(">>> import vulnradar  # the dream", col.cyan),
-    BR(),
-  ],
-
-  "node": () => [
-    L("Welcome to Node.js v22.0.0.", col.green),
-    L('Type ".help" for more information.', col.muted),
-    L("> ", col.fg),
-    L("(not a real Node shell)", col.muted),
-    L("> require('fs').readFileSync('.env.local')  // nice try", col.red),
-    BR(),
-  ],
-
-  "docker": () => [
-    L("docker: command not found.", col.red),
-    L("(we're serverless here — no containers needed)", col.muted),
-    L("Vercel handles deployments. It's fine.", col.green),
     BR(),
   ],
 
@@ -1567,10 +1478,25 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
   },
 
   "chmod": (args) => {
-    const f = (args ?? "").replace(/^chmod\s*\S+\s*/i, "").trim() || "secrets.txt"
+    const parts = (args ?? "").replace(/^(sudo\s+)?chmod\s*/i, "").trim().split(/\s+/)
+    const mode = parts[0] || "777"
+    const file = parts[1] || "secrets.txt"
     return [
-      L(`chmod: changing permissions of '${f}'`, col.fg),
-      L("chmod: Operation not permitted (you're not root)", col.red),
+      L(`chmod: changing permissions of '${file}' to ${mode}`, col.fg),
+      L(`chmod: Operation not permitted`, col.red),
+      L(`  hint: try 'sudo chmod ${mode} ${file}'`, col.muted),
+      BR(),
+    ]
+  },
+
+  "sudo chmod": (args) => {
+    const parts = (args ?? "").replace(/^(sudo\s+)?chmod\s*/i, "").trim().split(/\s+/)
+    const mode = parts[0] || "777"
+    const file = parts[1] || "secrets.txt"
+    return [
+      L(`chmod ${mode} ${file}`, col.muted),
+      L(`permissions updated: ${file} → ${mode}`, col.green),
+      L(`(ls -la would show: -rwxrwxrwx if 777)`, col.muted),
       BR(),
     ]
   },
@@ -1590,26 +1516,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     BR(),
   ],
 
-  "lsof": () => [
-    L("COMMAND   PID  USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME", col.primary),
-    L("next-srv    1    rm  cwd    DIR   259,1     4096    2 /app", col.fg),
-    L("next-srv    1    rm   3u  IPv4   12345      0t0  TCP *:443 (LISTEN)", col.fg),
-    L("easter-e   69    rm   6u  IPv4   69420      0t0  TCP *:6969 (LISTEN)", col.green),
-    BR(),
-  ],
-
-  "htop": () => [
-    L("  CPU[|                                         0.1%]", col.green),
-    L("  Mem[||||                                    69/420M]", col.green),
-    L("  Swp[                                          0/420M]", col.fg),
-    BR(),
-    L("  PID  USER       PRI  NI  VIRT   RES   CPU%  MEM%  TIME+   Command", col.primary),
-    L("    1  rm          20   0  123M  4200K   0.3   1.0  0:01.23 next-server", col.fg),
-    L("   69  rm          20   0   10M   420K   0.0   0.1  0:00.69 easter-egg", col.green),
-    BR(),
-    L("F1Help  F2Setup  F3Search  F5SortBy  F9Kill  F10Quit", col.muted),
-    BR(),
-  ],
 
   "speedtest": () => [
     L("Speedtest by Ookla", col.primary),
@@ -1623,45 +1529,6 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     BR(),
   ],
 
-  "openssl": () => [
-    L("OpenSSL 3.1.0  14 Mar 2023", col.fg),
-    L("Usage: openssl command [options]", col.fg),
-    BR(),
-    L("  openssl rand -hex 32  →  random secret key", col.muted),
-    L("  openssl s_client -connect rejectmodders.is-a.dev:443", col.muted),
-    BR(),
-    L("(this is a fake shell — go use real OpenSSL for real crypto)", col.red),
-    BR(),
-  ],
-
-  "tmux": () => [
-    L("tmux: no sessions.", col.fg),
-    L("[detached (from session 0)]", col.muted),
-    BR(),
-    L("Tip: Ctrl+b then % to split pane", col.muted),
-    L("(also none of this is real)", col.muted),
-    BR(),
-  ],
-
-  "crontab": () => [
-    L("# m h  dom mon dow   command", col.muted),
-    L("*/5 * * * *  curl https://vulnradar.dev/ping", col.fg),
-    L("0   0 * * *  ./backup.sh", col.fg),
-    L("@reboot      ./start-easter-egg.sh", col.green),
-    BR(),
-  ],
-
-  "ufw": () => [
-    L("Status: active", col.green),
-    BR(),
-    L("To                         Action      From", col.primary),
-    L("--                         ------      ----", col.muted),
-    L("443/tcp                    ALLOW       Anywhere", col.fg),
-    L("80/tcp                     ALLOW       Anywhere", col.fg),
-    L("22/tcp                     DENY        Anywhere", col.red),
-    L("6969/tcp (easter-egg)      ALLOW       Anywhere", col.green),
-    BR(),
-  ],
 
   "systemctl": (args) => {
     const sub = (args ?? "").replace(/^systemctl\s*/i, "").trim() || "status"
@@ -1720,6 +1587,751 @@ const COMMANDS: Record<string, (args?: string) => Line[]> = {
     }
     return [L("Usage: theme <dark|light>", col.red), BR()]
   },
+
+  // ── FILE SYSTEM ──────────────────────────────────────────────────────────
+  "cat /etc/passwd": () => [
+    L("root:x:0:0:root:/root:/bin/bash", col.fg),
+    L("daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin", col.fg),
+    L("rm:x:1000:1000:RejectModders:/home/rm:/bin/bash", col.green),
+    L("amanda:x:1001:1001:♥:/home/amanda:/bin/bash", col.primary),
+    L("nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin", col.muted),
+    BR(),
+    L("(you're snooping around /etc/passwd? classic.)", col.muted),
+    BR(),
+  ],
+
+  "cat /etc/os-release": () => [
+    L('NAME="Vercel Edge OS"', col.fg),
+    L('VERSION="1.0.0 (LTS)"', col.fg),
+    L('ID=vercel', col.fg),
+    L('ID_LIKE=debian', col.fg),
+    L('PRETTY_NAME="Vercel Edge OS 1.0.0 LTS"', col.green),
+    L('VERSION_CODENAME=rejectmodders', col.primary),
+    L('HOME_URL="https://rejectmodders.is-a.dev"', col.cyan),
+    BR(),
+  ],
+
+  "cat /proc/cpuinfo": () => [
+    L("processor   : 0", col.fg),
+    L("vendor_id   : GenuineIntel", col.fg),
+    L("model name  : Next.js Edge Runtime @ ∞ GHz", col.fg),
+    L("cache size  : Unlimited (CDN-backed)", col.fg),
+    L("bogomips    : 9999999.00", col.fg),
+    L("flags       : sse4 avx tsx portfolio_mode easter_egg", col.muted),
+    BR(),
+  ],
+
+  "cat /proc/meminfo": () => [
+    L("MemTotal:        430000 kB", col.fg),
+    L("MemFree:         351000 kB", col.fg),
+    L("MemAvailable:    400000 kB", col.fg),
+    L("Buffers:           1337 kB", col.fg),
+    L("Cached:           69420 kB", col.fg),
+    L("SwapTotal:       420000 kB", col.fg),
+    L("SwapFree:        406630 kB", col.fg),
+    BR(),
+  ],
+
+  "ls /": () => [
+    L("bin  boot  dev  etc  home  lib  media  mnt", col.fg),
+    L("opt  proc  root  run  sbin  srv  sys  tmp", col.fg),
+    L("usr  var  next.config.mjs  package.json", col.cyan),
+    BR(),
+  ],
+
+  "ls /home": () => [
+    L("total 2", col.muted),
+    L("drwxr-xr-x  rm      4096 Mar  1 00:00", col.fg),
+    L("drwxr-xr-x  amanda  4096 Mar  1 00:00", col.primary),
+    BR(),
+  ],
+
+  "ls /home/rm": () => [
+    L("total 8", col.muted),
+    L("-rw-r--r--  .bashrc         512", col.fg),
+    L("-rw-r--r--  .bash_history  1024", col.fg),
+    L("-rw-------  .ssh/           256", col.red),
+    L("-rw-r--r--  projects/      8192", col.cyan),
+    L("-rw-r--r--  vulnradar/     4096", col.cyan),
+    L("-rw-r--r--  todo.txt         42", col.yellow),
+    BR(),
+  ],
+
+  "cat /home/rm/todo.txt": () => [
+    L("# todo.txt", col.primary),
+    BR(),
+    L("  [x] build VulnRadar", col.green),
+    L("  [x] make portfolio terminal easter egg", col.green),
+    L("  [x] add amanda.txt easter egg", col.green),
+    L("  [ ] sleep more", col.red),
+    L("  [ ] touch grass occasionally", col.red),
+    L("  [ ] world domination", col.red),
+    BR(),
+  ],
+
+  "cat .bashrc": () => [
+    L("# .bashrc — rm@rejectmodders.is-a.dev", col.muted),
+    BR(),
+    L("export PATH=$HOME/.local/bin:$PATH", col.fg),
+    L("export EDITOR=vim", col.fg),
+    L("export PAGER=less", col.fg),
+    BR(),
+    L("alias ll='ls -la'", col.cyan),
+    L("alias py='python3'", col.cyan),
+    L("alias gs='git status'", col.cyan),
+    L("alias gp='git push'", col.cyan),
+    L("alias gc='git commit -m'", col.cyan),
+    L("alias hack='cd ~/vulnradar && python3 main.py'", col.cyan),
+    BR(),
+    L("# prompt", col.muted),
+    L('PS1="\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]$ "', col.fg),
+    BR(),
+  ],
+
+  "cat /etc/hosts": () => [
+    L("127.0.0.1   localhost", col.fg),
+    L("::1         localhost ip6-localhost ip6-loopback", col.fg),
+    L("76.76.21.21 rejectmodders.is-a.dev", col.green),
+    L("0.0.0.0     evil.com  # blocked", col.red),
+    L("0.0.0.0     trackers.net  # blocked", col.red),
+    BR(),
+  ],
+
+  "cat /etc/motd": () => [
+    L("╔═══════════════════════════════════╗", col.primary),
+    L("║  Welcome to rejectmodders.is-a.dev ║", col.primary),
+    L("║  Unauthorized access is logged.    ║", col.primary),
+    L("║  Just kidding. Hi :)               ║", col.primary),
+    L("╚═══════════════════════════════════╝", col.primary),
+    BR(),
+    L("Last login: " + new Date().toLocaleString() + " from your browser", col.muted),
+    BR(),
+  ],
+
+  motd: () => COMMANDS["cat /etc/motd"]!(),
+
+  // ── PROCESS / SYSTEM ─────────────────────────────────────────────────────
+  "ps aux": () => [
+    L("USER       PID  %CPU %MEM    VSZ   RSS TTY      STAT  COMMAND", col.primary),
+    L("root         1   0.0  0.1   2376   980 ?        Ss    /sbin/init", col.fg),
+    L("rm           2   0.2  2.1 123456  4200 pts/0    S     next-server", col.fg),
+    L("rm          69   0.0  0.1   1337   420 pts/0    S     easter-egg", col.green),
+    L("rm         420   0.0  0.1   6969   690 pts/0    R     bash", col.fg),
+    L("rm         421   0.0  0.0   5555   420 pts/0    R+    ps aux", col.cyan),
+    BR(),
+  ],
+
+  htop: () => [
+    L("  CPU [|||||||||||                  24%]   Tasks: 5 total", col.green),
+    L("  MEM [||||||||||||||||             69%]   Load avg: 0.1 0.1 0.0", col.yellow),
+    L("  SWP [||                            8%]   Uptime: forever", col.fg),
+    BR(),
+    L("  PID   USER    PRI  NI   VIRT   RES  CPU% MEM%  COMMAND", col.primary),
+    L("    1   root     20   0   2376   980   0.0  0.1   init", col.fg),
+    L("    2   rm       20   0  123456 4200   0.2  2.1   next-server", col.fg),
+    L("   69   rm       20   0   1337   420   0.0  0.1   easter-egg", col.green),
+    L("  420   rm       20   0   6969   690   0.0  0.1   bash", col.fg),
+    BR(),
+    L("F1 Help  F2 Setup  F3 Search  F4 Filter  F9 Kill  F10 Quit", col.muted),
+    L("(press q or F10 to quit htop — jk type clear)", col.muted),
+    BR(),
+  ],
+
+  kill: (args) => {
+    const pid = (args ?? "").replace(/kill\s*/i, "").trim() || "69"
+    if (pid === "69" || pid === "-9 69") return [L(`kill: (69) easter-egg: Operation not permitted`, col.red), BR()]
+    if (pid === "1")  return [L(`kill: (1) init: Operation not permitted. Don't kill init.`, col.red), BR()]
+    return [
+      L(`kill: sent SIGTERM to PID ${pid}`, col.yellow),
+      L(`(not really — there's no real process here)`, col.muted),
+      BR(),
+    ]
+  },
+
+  killall: (args) => {
+    const name = (args ?? "").replace(/killall\s*/i, "").trim() || "bash"
+    if (name === "easter-egg" || name === "terminal") return [L(`killall: (69) easter-egg: Operation not permitted`, col.red), BR()]
+    if (name === "next-server" || name === "node") return [L(`killall: (1) next-server: Operation not permitted`, col.red), BR()]
+    return [
+      L(`Killed ${name} (PID ${Math.floor(Math.random() * 9000) + 1000})`, col.green),
+      L(`(not really — nothing actually runs here)`, col.muted),
+      BR(),
+    ]
+  },
+
+  lsof: () => [
+    L("COMMAND   PID  USER   FD   TYPE    DEVICE SIZE/OFF NODE NAME", col.primary),
+    L("next        2    rm    4u  IPv4    0x1337     0t0  TCP *:3000 (LISTEN)", col.fg),
+    L("next        2    rm    6u  IPv4    0xdead     0t0  TCP *:443  (LISTEN)", col.fg),
+    L("bash      420    rm    0u   CHR      5,0     0t0    3 /dev/tty", col.fg),
+    L("terminal   69    rm    1u   REG      8,1    1337   42 /dev/easter-egg", col.green),
+    BR(),
+  ],
+
+  // ── NETWORK ───────────────────────────────────────────────────────────────
+  "ip addr": () => [
+    L("1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536", col.fg),
+    L("   inet 127.0.0.1/8 scope host lo", col.fg),
+    L("   inet6 ::1/128 scope host", col.fg),
+    BR(),
+    L("2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500", col.fg),
+    L("   inet 76.76.21.21/24 brd 76.76.21.255 scope global eth0", col.green),
+    L("   inet6 2606:4700::6810:1515/128 scope global dynamic", col.fg),
+    BR(),
+  ],
+
+  ss: () => [
+    L("Netid  State   Recv-Q  Send-Q  Local Address:Port  Peer Address:Port", col.primary),
+    L("tcp    LISTEN  0       128     0.0.0.0:443         0.0.0.0:*", col.green),
+    L("tcp    LISTEN  0       128     0.0.0.0:80          0.0.0.0:*", col.fg),
+    L("tcp    ESTAB   0       0       76.76.21.21:443     *:*", col.fg),
+    BR(),
+  ],
+
+  iptables: () => [
+    L("Chain INPUT (policy ACCEPT)", col.fg),
+    L("target     prot  source           destination", col.primary),
+    L("ACCEPT     tcp   anywhere         anywhere    tcp dpt:https", col.green),
+    L("ACCEPT     tcp   anywhere         anywhere    tcp dpt:http", col.green),
+    L("DROP       tcp   evil.com         anywhere", col.red),
+    BR(),
+    L("Chain FORWARD (policy DROP)", col.fg),
+    L("Chain OUTPUT (policy ACCEPT)", col.fg),
+    BR(),
+  ],
+
+  ufw: () => [
+    L("Status: active", col.green),
+    BR(),
+    L("To                         Action      From", col.primary),
+    L("──                         ──────      ────", col.muted),
+    L("443/tcp                    ALLOW IN    Anywhere", col.green),
+    L("80/tcp                     ALLOW IN    Anywhere", col.green),
+    L("22/tcp                     DENY IN     Anywhere", col.red),
+    BR(),
+  ],
+
+  "curl ifconfig.me": () => [
+    L("Fetching your public IP...", col.muted),
+    L("(this would reveal your IP — so we won't)", col.yellow),
+    L("Use 'myip' for a safe version.", col.muted),
+    BR(),
+  ],
+
+  // ── GIT EXTENDED ─────────────────────────────────────────────────────────
+  "git stash": () => [
+    L("Saved working directory and index state", col.green),
+    L('WIP on main: a1b2c3d "feat: more terminal commands"', col.muted),
+    BR(),
+  ],
+
+  "git branch": () => [
+    L("* main", col.green),
+    L("  dev", col.fg),
+    L("  feat/terminal-easter-egg", col.fg),
+    L("  feat/vulnradar-integration", col.fg),
+    L("  fix/cursor-magnet-issue", col.red),
+    BR(),
+    L("(5 branches, 1 deleted: 'fix/that-weird-bug')", col.muted),
+    BR(),
+  ],
+
+  "git diff": () => [
+    L("diff --git a/terminal-easter-egg.tsx b/terminal-easter-egg.tsx", col.fg),
+    L("--- a/terminal-easter-egg.tsx", col.red),
+    L("+++ b/terminal-easter-egg.tsx", col.green),
+    L("@@ -1,5 +1,150 @@", col.cyan),
+    L('+  "cat /etc/passwd": () => [...],', col.green),
+    L('+  "htop": () => [...],', col.green),
+    L('+  "git diff": () => [...],', col.green),
+    L('+  // 50 more commands...', col.green),
+    BR(),
+    L("That's this very commit. Meta.", col.muted),
+    BR(),
+  ],
+
+  "git log --oneline": () => [
+    L("a1b2c3d (HEAD -> main) feat: massive terminal expansion", col.yellow),
+    L("f00dcaf fix: particles SSR crash", col.fg),
+    L("deadbee feat: command palette + theme toggle", col.fg),
+    L("cafebab feat: floating CTA + rage-click + visitor counter", col.fg),
+    L("0xdeadc feat: cached github api route", col.fg),
+    L("1337420 feat: konami code terminal v1", col.fg),
+    L("0000001 init: portfolio v2", col.muted),
+    BR(),
+  ],
+
+  "git clone": (args) => {
+    const repo = (args ?? "").replace(/git clone\s*/i, "").trim() || "https://github.com/RejectModders/rejectmodders.is-a.dev"
+    return [
+      L(`Cloning into '${repo.split("/").pop()}'...`, col.fg),
+      L("remote: Enumerating objects: 1337, done.", col.muted),
+      L("remote: Counting objects: 100% (1337/1337), done.", col.muted),
+      L("Receiving objects: 100% (1337/1337), 4.20 MiB | 69.0 MiB/s, done.", col.green),
+      BR(),
+    ]
+  },
+
+  // ── PACKAGE MANAGERS ─────────────────────────────────────────────────────
+  "sudo apt install": (args) => {
+    const pkg = (args ?? "").replace(/^(sudo\s+)?(apt-get\s+|apt\s+)(install\s+)?/i, "").trim() || "vim"
+    return [
+      L(`Reading package lists... Done`, col.fg),
+      L(`Building dependency tree... Done`, col.fg),
+      L(`The following NEW packages will be installed: ${pkg}`, col.fg),
+      L(`0 upgraded, 1 newly installed, 0 to remove.`, col.fg),
+      L(`Fetching ${pkg}...`, col.muted),
+      L(`Selecting previously unselected package ${pkg}.`, col.muted),
+      L(`Setting up ${pkg}... done.`, col.green),
+      BR(),
+      L("(nothing actually installed — this is a browser)", col.muted),
+      BR(),
+    ]
+  },
+
+  "apt install": (args) => COMMANDS["sudo apt install"]!(args),
+  apt: (args) => COMMANDS["sudo apt install"]!(args),
+
+  "npm install": (args) => {
+    const pkg = (args ?? "").replace(/npm install\s*/i, "").trim() || "express"
+    return [
+      L(`npm warn deprecated ${pkg}@1.0.0: Please use the new version`, col.yellow),
+      L(`added 847 packages from 214 contributors`, col.fg),
+      L(`found 0 vulnerabilities (checked by VulnRadar)`, col.green),
+      BR(),
+    ]
+  },
+
+  brew: (args) => {
+    const sub = (args ?? "").replace(/brew\s*/i, "").trim()
+    return [
+      L(`==> ${sub || "help"}`, col.green),
+      L(`Error: Homebrew is not supported on Vercel Edge Runtime.`, col.red),
+      L(`Try: sudo apt install ${sub || "<package>"}`, col.muted),
+      BR(),
+    ]
+  },
+
+  // ── SECURITY TOOLS ────────────────────────────────────────────────────────
+  openssl: (args) => {
+    const sub = (args ?? "").replace(/openssl\s*/i, "").trim() || "version"
+    if (sub === "version") return [L("OpenSSL 3.2.0 (browser stub)", col.green), BR()]
+    if (sub.startsWith("rand")) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+      const n = 32
+      let s = ""
+      for (let i = 0; i < n; i++) s += chars[Math.floor(Math.random() * chars.length)]
+      return [L(s, col.green), BR()]
+    }
+    return [
+      L("openssl s_client -connect rejectmodders.is-a.dev:443", col.muted),
+      L("depth=2 C=US, O=Let's Encrypt", col.fg),
+      L("verify return:1", col.green),
+      L("Certificate chain verified: OK", col.green),
+      L("TLS 1.3, cipher TLS_AES_256_GCM_SHA384", col.fg),
+      BR(),
+    ]
+  },
+
+  "ssh-keygen": () => [
+    L("Generating public/private ed25519 key pair.", col.fg),
+    L("Enter file: /home/rm/.ssh/id_ed25519", col.fg),
+    L("Enter passphrase: ****", col.muted),
+    BR(),
+    L("Your identification has been saved in /home/rm/.ssh/id_ed25519", col.fg),
+    L("Your public key has been saved in /home/rm/.ssh/id_ed25519.pub", col.fg),
+    BR(),
+    L("SHA256:rm4c3sSg00dK3y+f0rS3cur1ty (rm@rejectmodders.is-a.dev)", col.green),
+    BR(),
+    L("(key not actually generated — this is a browser)", col.muted),
+    BR(),
+  ],
+
+  gpg: () => [
+    L("gpg (GnuPG) 2.4.0", col.fg),
+    BR(),
+    L("pub   ed25519 2024-01-01 [SC]", col.fg),
+    L("      DEADBEEF1337C0FFEEBADC0FFEECAFEF00D", col.green),
+    L("uid   RejectModders <rm@rejectmodders.is-a.dev>", col.fg),
+    L("sub   cv25519 2024-01-01 [E]", col.fg),
+    BR(),
+  ],
+
+  // ── MISC LINUX UTILS ─────────────────────────────────────────────────────
+  "which": (args) => {
+    const cmd = (args ?? "").replace(/which\s*/i, "").trim() || "bash"
+    const paths: Record<string, string> = {
+      bash: "/bin/bash", python3: "/usr/bin/python3", node: "/usr/local/bin/node",
+      vim: "/usr/bin/vim", git: "/usr/bin/git", curl: "/usr/bin/curl",
+      ssh: "/usr/bin/ssh", docker: "/usr/bin/docker",
+    }
+    return [L(paths[cmd] ?? `/usr/local/bin/${cmd}`, col.green), BR()]
+  },
+
+  "type": (args) => {
+    const cmd = (args ?? "").replace(/type\s*/i, "").trim() || "ls"
+    return [L(`${cmd} is a shell builtin`, col.fg), BR()]
+  },
+
+  alias: () => [
+    L("alias ll='ls -la'", col.cyan),
+    L("alias py='python3'", col.cyan),
+    L("alias gs='git status'", col.cyan),
+    L("alias gp='git push'", col.cyan),
+    L("alias gc='git commit -m'", col.cyan),
+    L("alias hack='cd ~/vulnradar && python3 main.py'", col.cyan),
+    L("alias please='sudo'", col.yellow),
+    L("alias fuck='sudo !!'", col.yellow),
+    L("alias ..='cd ..'", col.fg),
+    L("alias ...='cd ../..'", col.fg),
+    BR(),
+  ],
+
+  export: (args) => {
+    const kv = (args ?? "").replace(/export\s*/i, "").trim()
+    if (!kv) return [L("declare -x NODE_ENV=production", col.fg), L("declare -x SITE=rejectmodders.is-a.dev", col.fg), BR()]
+    return [L(`export: ${kv} — set for this session only`, col.green), BR()]
+  },
+
+  source: (args) => {
+    const f = (args ?? "").replace(/source\s*/i, "").trim() || ".bashrc"
+    return [L(`Sourcing ${f}...`, col.muted), L("done.", col.green), BR()]
+  },
+
+  "strace": (args) => {
+    const cmd = (args ?? "").replace(/strace\s*/i, "").trim() || "ls"
+    return [
+      L(`strace: ${cmd}`, col.muted),
+      L(`execve("/bin/${cmd}", ["${cmd}"], envp) = 0`, col.fg),
+      L(`brk(NULL)                               = 0x55a2d4620000`, col.fg),
+      L(`read(3, "\\177ELF...", 832)               = 832`, col.fg),
+      L(`write(1, "output\\n", 7)                 = 7`, col.fg),
+      L(`exit_group(0)                           = ?`, col.fg),
+      BR(),
+      L("(everything looks clean. no rootkits detected.)", col.green),
+      BR(),
+    ]
+  },
+
+  tee: (args) => {
+    const f = (args ?? "").replace(/tee\s*/i, "").trim() || "output.txt"
+    return [L(`tee: writing to ${f} (stdout only — no real filesystem)`, col.muted), BR()]
+  },
+
+  wc: (args) => {
+    const target = (args ?? "").replace(/wc\s*/i, "").trim() || "terminal-easter-egg.tsx"
+    return [
+      L(`  2115  12420  98304 ${target}`, col.fg),
+      L("(2115 lines, 12420 words, 98304 bytes)", col.muted),
+      BR(),
+    ]
+  },
+
+  sort: () => [L("amanda", col.primary), L("rejectmodders", col.fg), L("vulnradar", col.fg), BR()],
+
+  uniq: () => [L("(no duplicates found — you're one of a kind)", col.green), BR()],
+
+  diff: (args) => {
+    const f = (args ?? "").replace(/diff\s*/i, "").trim()
+    if (!f) return [L("Usage: diff <file1> <file2>", col.red), BR()]
+    return [
+      L(`diff ${f}`, col.muted),
+      L("< old version", col.red),
+      L("> new version (better)", col.green),
+      BR(),
+    ]
+  },
+
+  "find": (args) => {
+    const q = (args ?? "").replace(/find\s*/i, "").trim() || "."
+    return [
+      L(`find ${q}`, col.muted),
+      L("./app/page.tsx", col.fg),
+      L("./components/terminal-easter-egg.tsx", col.fg),
+      L("./components/custom-cursor.tsx", col.fg),
+      L("./public/avatar.png", col.fg),
+      L("./public/manifest.json", col.fg),
+      L("./.secret-flag-do-not-read", col.red),
+      BR(),
+      L("(found 1337 files. some of them are yours.)", col.muted),
+      BR(),
+    ]
+  },
+
+  grep: (args) => {
+    const q = (args ?? "").replace(/grep\s*/i, "").trim() || "password"
+    return [
+      L(`grep -r "${q}" .`, col.muted),
+      L(`./app/globals.css:--primary: oklch(0.58 0.2 15);`, col.fg),
+      L(`./components/terminal-easter-egg.tsx:// many many lines`, col.fg),
+      q === "password" ? L("./NOT_A_REAL_FILE.txt:password=hunter2", col.red) : L("(no sensitive results)", col.green),
+      BR(),
+    ]
+  },
+
+  // ── FUN / CREATIVE ────────────────────────────────────────────────────────
+  doge: () => [
+    L("       ▄              ▄           ", col.yellow),
+    L("      ▌▒█           ▄▀▒▌          ", col.yellow),
+    L("      ▌▒▒█        ▄▀▒▒▒▐          ", col.yellow),
+    L("     ▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐          ", col.yellow),
+    L("   ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐          ", col.yellow),
+    L("  ▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▀▒▒▒▒▐         ", col.yellow),
+    BR(),
+    L("  wow. such terminal. very commands. much bash.", col.yellow),
+    L("  many linux. so hacker. wow.", col.yellow),
+    BR(),
+  ],
+
+  nyan: () => [
+    L("+      o     +              o   ", "text-pink-400"),
+    L("    +             o     +       +", "text-pink-400"),
+    L("o          +                       ", "text-pink-400"),
+    L("   █████▓▓▓▒▒▒░░░░░░ ≋≋≋≋≋≋≋≋≋≋ ~", "text-pink-400"),
+    L("  ██  ██ ██  ██ █████ ≋≋≋≋≋≋≋≋≋≋ ~", "text-yellow-400"),
+    L("  ██████ ██████ ██    ≋≋≋≋≋≋≋≋≋≋ ~", "text-green-400"),
+    L("  ██  ██ ██  ██ █████ ≋≋≋≋≋≋≋≋≋≋ ~", "text-cyan-400"),
+    L("+             +   nyan nyan nyan  ~", "text-blue-400"),
+    BR(),
+  ],
+
+  parrot: () => [
+    L("    🦜", col.primary),
+    L("  PARTY PARROT", col.primary),
+    L(" ▓▒░ beep boop ░▒▓", col.muted),
+    L("  🎉 PARTYING  🎉", col.green),
+    BR(),
+  ],
+
+  rick: () => [
+    L("Never gonna give you up,", col.primary),
+    L("Never gonna let you down,", col.primary),
+    L("Never gonna run around and desert you.", col.primary),
+    L("Never gonna make you cry,", col.primary),
+    L("Never gonna say goodbye,", col.primary),
+    L("Never gonna tell a lie and hurt you.", col.primary),
+    BR(),
+    L("  ♪ You have been rickrolled by the terminal. ♪", col.muted),
+    BR(),
+  ],
+
+  "sudo please": () => [
+    L("sudo: you said please — points for politeness.", col.yellow),
+    L("sudo: still denied though.", col.red),
+    L("  hint: try 'sudo make me a sandwich'", col.muted),
+    BR(),
+  ],
+
+  "sudo make me a sandwich": () => [
+    L("[sudo] password for rm: ✓ authenticated", col.green),
+    BR(),
+    L("    🥪", col.fg),
+    BR(),
+    L("One sandwich, made with root privileges.", col.green),
+    BR(),
+  ],
+
+  "sudo please make me a sandwich": () => [
+    L("[sudo] password for rm: ✓ authenticated", col.green),
+    BR(),
+    L("    🥪  🥪  🥪", col.fg),
+    BR(),
+    L("Three sandwiches. You said please.", col.green),
+    BR(),
+  ],
+
+  ":(){ :|:& };:": () => [
+    L("bash: fork bomb detected!", col.red),
+    L("Activating countermeasures...", col.red),
+    L("Process tree limited to 1337 processes.", col.yellow),
+    L("Crisis averted. Next.js survived.", col.green),
+    BR(),
+  ],
+
+  python3: (args) => {
+    const code = (args ?? "").replace(/python3?\s*/i, "").trim()
+    if (!code) return [
+      L("Python 3.12.0 (main, Mar 1 2026)", col.green),
+      L('Type "help", "copyright", "credits" or "license" for more information.', col.muted),
+      L(">>> ", col.green),
+      L("(type exit() to quit — jk just type clear)", col.muted),
+      BR(),
+    ]
+    if (code === "import antigravity") return [L("🛸 (you're floating)", col.cyan), BR()]
+    if (code === "import this") return [
+      L("The Zen of Python, by Tim Peters", col.primary),
+      L("Beautiful is better than ugly.", col.fg),
+      L("Explicit is better than implicit.", col.fg),
+      L("Simple is better than complex.", col.fg),
+      L("Complex is better than complicated.", col.fg),
+      L("Readability counts.", col.fg),
+      BR(),
+    ]
+    try {
+      const r = eval(code) // intentionally limited — only math/simple expressions
+      return [L(`>>> ${code}`, col.muted), L(String(r), col.green), BR()]
+    } catch {
+      return [L(`SyntaxError: ${code}`, col.red), BR()]
+    }
+  },
+
+  python: (args) => COMMANDS["python3"]!(args),
+
+  node: (args) => {
+    const code = (args ?? "").replace(/node\s*/i, "").trim()
+    if (!code) return [
+      L("Welcome to Node.js v22.0.0.", col.green),
+      L('Type ".help" for more information.', col.muted),
+      L("> ", col.green),
+      BR(),
+    ]
+    return [L(`> ${code}`, col.muted), L("undefined", col.muted), BR()]
+  },
+
+  "docker": (args) => {
+    const sub = (args ?? "").replace(/docker\s*/i, "").trim() || "version"
+    if (sub === "ps") return [
+      L("CONTAINER ID   IMAGE          COMMAND         STATUS         PORTS     NAMES", col.primary),
+      L("a1b2c3d4e5f6   next:latest    next start      Up 99 days     443/tcp   portfolio", col.green),
+      L("deadbeef1234   postgres:15    pg_ctl start    Up 99 days     5432/tcp  db", col.fg),
+      BR(),
+    ]
+    return [
+      L(`Docker version 25.0.0, build a1b2c3d`, col.green),
+      L("docker: '" + sub + "' is not a docker command.", sub === "version" ? col.fg : col.red),
+      BR(),
+    ]
+  },
+
+  tmux: () => [
+    L("[detached (from session rm-terminal)]", col.green),
+    BR(),
+    L("  tmux ls:", col.primary),
+    L("  0: rm-terminal (1 window) created just now", col.fg),
+    L("  1: vulnradar (3 windows) created yesterday", col.fg),
+    BR(),
+    L("(press Ctrl+B then D to detach — jk type clear)", col.muted),
+    BR(),
+  ],
+
+  "crontab": () => [
+    L("# crontab -l", col.primary),
+    BR(),
+    L("# m h  dom mon dow   command", col.muted),
+    L("  * * * * *  curl -s https://rejectmodders.is-a.dev > /dev/null", col.fg),
+    L("  0 9 * * 1  echo 'start of week: touch grass'", col.yellow),
+    L("  0 2 * * *  vulnradar --scan rejectmodders.is-a.dev", col.green),
+    BR(),
+  ],
+
+  "watch": (args) => {
+    const cmd = (args ?? "").replace(/watch\s*/i, "").trim() || "date"
+    return [
+      L(`Every 2.0s: ${cmd}`, col.fg),
+      BR(),
+      L(new Date().toString(), col.green),
+      BR(),
+      L("(press Ctrl+C to quit — jk type clear)", col.muted),
+      BR(),
+    ]
+  },
+
+  "id": () => [
+    L("uid=1000(rm) gid=1000(rm) groups=1000(rm),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),1001(security),1337(hacker)", col.green),
+    BR(),
+  ],
+
+  "groups": () => [
+    L("rm adm cdrom sudo dip plugdev security hacker", col.green),
+    BR(),
+  ],
+
+  "last": () => [
+    L("rm       pts/0        " + new Date().toDateString() + " still logged in", col.green),
+    L("rm       pts/0        Mar  1 2026 - 03:14:15  (42:00)", col.fg),
+    L("reboot   system boot  Mar  1 2026", col.muted),
+    L("", ""),
+    L("wtmp begins Mar  1 2026", col.muted),
+    BR(),
+  ],
+
+  "w": () => [
+    L(" " + new Date().toLocaleTimeString() + " up forever,  1 user,  load average: 0.00, 0.00, 0.00", col.fg),
+    L("USER     TTY      FROM             LOGIN@   IDLE JCPU   PCPU WHAT", col.primary),
+    L("rm       pts/0    browser          00:00    0.00s 0.01s  0.00s bash", col.green),
+    BR(),
+  ],
+
+  "who": () => [
+    L("rm       pts/0        " + new Date().toDateString() + " (browser)", col.green),
+    BR(),
+  ],
+
+  // ── DISK / FS ─────────────────────────────────────────────────────────────
+  "lsblk": () => [
+    L("NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT", col.primary),
+    L("vda           8:0    0   100G  0 disk", col.fg),
+    L("├─vda1        8:1    0    99G  0 part /", col.fg),
+    L("└─vda2        8:2    0     1G  0 part [SWAP]", col.fg),
+    L("cdn           0:0    0   999G  0 net  /public", col.green),
+    BR(),
+  ],
+
+  mount: () => [
+    L("/dev/vda1 on / type ext4 (rw,relatime)", col.fg),
+    L("/dev/cdn on /public type cdn (ro,global,fast)", col.green),
+    L("tmpfs on /tmp type tmpfs (rw,nosuid,nodev)", col.fg),
+    L("sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)", col.fg),
+    BR(),
+  ],
+
+  "md5sum": (args) => {
+    const text = (args ?? "").replace(/md5sum\s*/i, "").trim() || "rejectmodders"
+    let h = 0
+    for (let i = 0; i < text.length; i++) { h = ((h << 5) - h + text.charCodeAt(i)) | 0 }
+    const hex = (Math.abs(h) * 2654435761 >>> 0).toString(16).padStart(8, "0")
+    const fake = hex + "deadbeef1337c0ff"
+    return [L(`${fake}  ${text}`, col.green), BR()]
+  },
+
+  "sha256sum": (args) => {
+    const text = (args ?? "").replace(/sha256sum\s*/i, "").trim() || "rejectmodders"
+    let h = 5381
+    for (let i = 0; i < text.length; i++) { h = ((h << 5) + h + text.charCodeAt(i)) | 0 }
+    const hex = (Math.abs(h) >>> 0).toString(16).padStart(8, "0")
+    const fake = hex.repeat(4) + "a1b2c3d4"
+    return [L(`${fake}  ${text}`, col.green), BR()]
+  },
+
+  // ── EXTENDED HELP ────────────────────────────────────────────────────────
+  "help --all": () => [
+    L("# ALL COMMANDS (including Linux extras)", col.primary),
+    BR(),
+    L("File System:  cat /etc/passwd  cat /etc/os-release  cat /proc/cpuinfo", col.fg),
+    L("              cat /proc/meminfo  ls /  ls /home  ls /home/rm", col.fg),
+    L("              cat /home/rm/todo.txt  cat .bashrc  cat /etc/hosts", col.fg),
+    L("              cat /etc/motd  motd  find  grep  diff  wc  sort  uniq", col.fg),
+    BR(),
+    L("Process:      ps aux  htop  kill  killall  lsof  top  watch  id  groups", col.fg),
+    L("              last  w  who  strace  tmux  crontab", col.fg),
+    BR(),
+    L("Network:      ip addr  ss  iptables  ufw  curl ifconfig.me  openssl", col.fg),
+    L("              ssh-keygen  gpg  netstat  dig  nslookup  traceroute  nmap", col.fg),
+    BR(),
+    L("Git:          git log --oneline  git branch  git diff  git stash", col.fg),
+    L("              git clone  git status", col.fg),
+    BR(),
+    L("Packages:     sudo apt install  apt  npm install  brew  docker", col.fg),
+    BR(),
+    L("Utils:        which  type  alias  export  source  tee  md5sum  sha256sum", col.fg),
+    L("              lsblk  mount  python3  node  cmatrix", col.fg),
+    BR(),
+    L("Fun:          doge  nyan  parrot  rick  sudo please  sudo make me a sandwich", col.fg),
+    L("              :(){ :|:& };:  cursor <color>  theme <dark|light>", col.fg),
+    BR(),
+    L("Type 'help' for the main help table.", col.muted),
+    BR(),
+  ],
 }
 
 // ── Async commands ────────────────────────────────────────────────────────────
@@ -1775,6 +2387,10 @@ export function TerminalEasterEgg() {
   const [isMinimized, setIsMinimized]   = useState(false)
   const [pos, setPos]               = useState({ x: 0, y: 0 })
   const [dragging, setDragging]     = useState(false)
+  // sudo password flow
+  const [sudoPending, setSudoPending]         = useState<string | null>(null)   // the full cmd waiting for auth
+  const [sudoAuthenticated, setSudoAuthenticated] = useState(false)             // stays true for session
+  const [awaitingPassword, setAwaitingPassword]   = useState(false)
   const dragStart                   = useRef({ mx: 0, my: 0, px: 0, py: 0 })
   const inputRef  = useRef<HTMLInputElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -1857,6 +2473,9 @@ export function TerminalEasterEgg() {
       setInput("")
       setCmdHistory([])
       setHistIdx(-1)
+      setSudoAuthenticated(false)
+      setSudoPending(null)
+      setAwaitingPassword(false)
       setTimeout(() => inputRef.current?.focus(), 80)
     }
   }, [open])
@@ -1886,8 +2505,14 @@ export function TerminalEasterEgg() {
     if (cmd === "maximize")   { setIsFullscreen(true); appendLines([L("Maximized.", col.muted), BR()]); return }
     if (cmd === "history") {
       appendLines(cmdHistory.length
-        ? cmdHistory.map((c, i) => L(`  ${cmdHistory.length - i}  ${c}`, col.muted)).concat([BR()])
+        ? cmdHistory.slice().reverse().map((c, i) => L(`  ${String(i + 1).padStart(4)}  ${c}`, col.muted)).concat([BR()])
         : [L("  no history yet", col.muted), BR()])
+      return
+    }
+    if (cmd === "history -c") {
+      setCmdHistory([])
+      setHistIdx(-1)
+      appendLines([L("History cleared.", col.green), BR()])
       return
     }
 
@@ -1897,21 +2522,58 @@ export function TerminalEasterEgg() {
       return
     }
 
-    // sudo passthrough — run the underlying command
+    // ── sudo handler ──────────────────────────────────────────────────────
     if (cmd.startsWith("sudo ")) {
-      const sub = cmd.slice(5)
-      const handler = COMMANDS[sub]
+      const sub = cmd.slice(5).trim()
 
-      if (handler) {
-        appendLines(handler())
-      } else if (ASYNC_CMDS[sub]) {
-        appendLines([L("running async command...", col.muted)])
-        const result = await ASYNC_CMDS[sub]()
-        appendLines(result)
-      } else {
-        appendLines([L(`sudo: ${sub}: command not found`, col.red), BR()])
+      // sudo please — no password, just a joke
+      if (sub === "please") {
+        appendLines(COMMANDS["sudo please"]!())
+        return
       }
 
+      // everything else requires password
+      if (!sudoAuthenticated) {
+        setSudoPending(trimmed)
+        setAwaitingPassword(true)
+        appendLines([L(`[sudo] password for rm: `, col.fg)])
+        return
+      }
+
+      // ── authenticated — now run the command ───────────────────────────
+
+      // exact-match sudo keys first (sudo cat secrets.txt, sudo make me a sandwich, etc.)
+      if (COMMANDS[cmd]) {
+        appendLines(COMMANDS[cmd]!(trimmed))
+        return
+      }
+
+      // try the sub-command directly
+      if (COMMANDS[sub]) {
+        appendLines(COMMANDS[sub]!(sub))
+        return
+      }
+
+      // try prefix match (sudo apt install vim → apt handler with "apt install vim")
+      const prefixList = [
+        "apt install","apt-get install","apt","systemctl","cat",
+        "chmod","chown","dd","make","npm","pip","python3","python","node",
+      ]
+      for (const p of prefixList) {
+        if (sub.startsWith(p + " ") || sub === p) {
+          // prefer "sudo chmod" over "chmod" if it exists
+          const handler = COMMANDS["sudo " + p] ?? COMMANDS[p] ?? COMMANDS[p.split(" ")[0]]
+          if (handler) { appendLines(handler(sub)); return }
+        }
+      }
+
+      if (ASYNC_CMDS[sub]) {
+        appendLines([L("running...", col.muted)])
+        const result = await ASYNC_CMDS[sub]()
+        appendLines(result)
+        return
+      }
+      appendLines([L(`sudo: ${sub}: command not found`, col.red), BR()])
       return
     }
 
@@ -1923,29 +2585,87 @@ export function TerminalEasterEgg() {
       return
     }
 
-    // sync commands
+    // sync commands (exact match)
     const handler = COMMANDS[cmd]
     if (handler) {
       appendLines(handler(trimmed))
       return
     }
 
-    // prefix commands (man <x>, touch <x>, and encoding tools)
-    const prefixCmds = ["man","touch","base64","rot13","morse","binary","hex","md5","dice","rps","wget","nslookup","dig","grep","which","file","wc","systemctl","pip","npm"]
+    // prefix commands
+    const prefixCmds = [
+      "help",
+      "man","touch","echo",
+      "base64","rot13","morse","binary","hex","md5","md5sum","sha256sum",
+      "dice","rps","wget","nslookup","dig",
+      "grep","which","file","wc","systemctl","pip","npm",
+      "kill","killall","strace","tee","diff","find","export","source","type","watch",
+      "openssl","docker","brew",
+      "git clone","git stash","git log","git diff","git branch","git",
+      "sudo apt install","apt install","apt",
+      "npm install","python3","python","node",
+      "cursor","theme","cowsay","fortune","joke","quote","ping",
+      "chmod","chown","useradd","passwd",
+    ]
     for (const prefix of prefixCmds) {
       if (cmd.startsWith(prefix + " ") && COMMANDS[prefix]) {
-        appendLines(COMMANDS[prefix](trimmed))
+        appendLines(COMMANDS[prefix]!(trimmed))
         return
       }
     }
 
-    appendLines([L(`bash: ${cmd}: command not found`, col.red), BR()])
-  }, [appendLines, cmdHistory])
+    appendLines([L(`bash: ${trimmed}: command not found`, col.red), BR()])
+  }, [appendLines, cmdHistory, sudoAuthenticated, setSudoPending, setAwaitingPassword])
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const val = input
       setInput("")
+
+      // ── password prompt interception ──────────────────────────────────
+      if (awaitingPassword) {
+        setAwaitingPassword(false)
+        appendLines([L(`[sudo] password for rm: ${"*".repeat(Math.max(val.length, 8))}`, col.muted)])
+
+        if (val.toLowerCase() === "password") {
+          setSudoAuthenticated(true)
+          appendLines([L("✓ authenticated", col.green), BR()])
+
+          if (sudoPending) {
+            const pending = sudoPending.trim()
+            setSudoPending(null)
+            const pendingCmd = pending.toLowerCase()
+            const sub = pendingCmd.slice(5).trim() // strip "sudo "
+
+            // exact-match sudo key
+            if (COMMANDS[pendingCmd]) {
+              appendLines(COMMANDS[pendingCmd]!(pending))
+            } else if (COMMANDS[sub]) {
+              appendLines(COMMANDS[sub]!(sub))
+            } else {
+              // prefix match
+              const pl = ["apt install","apt-get install","apt","systemctl","cat","chmod","chown","npm","pip","python3","python","node"]
+              let handled = false
+              for (const p of pl) {
+                if (sub.startsWith(p + " ") || sub === p) {
+                  const h = COMMANDS["sudo " + p] ?? COMMANDS[p] ?? COMMANDS[p.split(" ")[0]]
+                  if (h) { appendLines(h(sub)); handled = true; break }
+                }
+              }
+              if (!handled) appendLines([L(`sudo: ${sub}: command not found`, col.red), BR()])
+            }
+          }
+        } else {
+          setSudoPending(null)
+          appendLines([
+            L("sudo: 1 incorrect password attempt", col.red),
+            L("sudo: Authentication failure", col.red),
+            BR(),
+          ])
+        }
+        return
+      }
+
       runCommand(val)
       return
     }
@@ -1978,7 +2698,7 @@ export function TerminalEasterEgg() {
       if (match) setInput(match)
       return
     }
-  }, [input, cmdHistory, runCommand])
+  }, [input, cmdHistory, runCommand, awaitingPassword, sudoPending, appendLines])
 
   return (
     <>
@@ -2076,11 +2796,11 @@ export function TerminalEasterEgg() {
 
               {/* Output */}
               <div
-                className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 space-y-0.5 cursor-text"
+                className="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 space-y-0.5 cursor-text"
                 onClick={() => inputRef.current?.focus()}
               >
                 {lines.map((line, i) => (
-                  <div key={i} className={`leading-5 whitespace-pre overflow-hidden ${line.color}`}>
+                  <div key={i} className={`font-mono text-xs leading-5 whitespace-pre ${line.color}`}>
                     {line.text || "\u00a0"}
                   </div>
                 ))}
@@ -2098,8 +2818,9 @@ export function TerminalEasterEgg() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  type={awaitingPassword ? "password" : "text"}
                   className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground/40 caret-primary ml-1"
-                  placeholder="type a command..."
+                  placeholder={awaitingPassword ? "enter password..." : "type a command..."}
                   autoComplete="off"
                   spellCheck={false}
                 />

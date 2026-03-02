@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { RefreshCw } from "lucide-react"
+import { RefreshCw, Home } from "lucide-react"
 
 export default function GlobalError({
   error,
@@ -10,97 +10,139 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  const [tick, setTick] = useState(true)
+  const [cursor, setCursor] = useState(true)
+  const [tick, setTick] = useState(0)
+  const errorMsg = (error.message ?? "Unknown critical error").slice(0, 60)
+  const lineNum  = Math.floor(Math.random() * 300) + 1
 
   useEffect(() => {
     console.error("[GlobalError]", error)
-    const t = setInterval(() => setTick(v => !v), 600)
+    const t = setInterval(() => { setCursor(v => !v); setTick(v => v + 1) }, 600)
     return () => clearInterval(t)
   }, [error])
 
   const lines = [
-    { prompt: true,  text: " bash --login",                         color: "#e2e8f0" },
-    { prompt: false, text: "  [CRITICAL] Application shell crashed", color: "#f87171" },
-    { prompt: false, text: `  Error: ${(error.message ?? "Unknown error").slice(0,52)}`, color: "#fb923c" },
-    { prompt: false, text: "",                                       color: "" },
-    { prompt: false, text: "  This is a top-level crash.",           color: "#94a3b8" },
-    { prompt: false, text: "  The page will reload on retry.",       color: "#94a3b8" },
-    ...(error.digest ? [{ prompt: false, text: `  digest: ${error.digest}`, color: "#475569" }] : []),
+    { prompt: true,  text: " bash --login",                                   color: "#e2e8f0" },
+    { prompt: false, text: "  ⨯ [CRITICAL] Application shell crashed",        color: "#f87171" },
+    { prompt: false, text: `  Error: ${errorMsg}`,                            color: "#fb923c" },
+    { prompt: false, text: `  at Object.<anonymous> (app/layout.tsx:${lineNum}:8)`, color: "#64748b" },
+    { prompt: false, text: "",                                                  color: "" },
+    { prompt: false, text: "  HTTP/2 500  Internal Server Error",             color: "#f87171" },
+    ...(error.digest ? [{ prompt: false, text: `  digest: ${error.digest}`,   color: "#475569" }] : []),
+    { prompt: false, text: "",                                                  color: "" },
+    { prompt: false, text: "  Top-level crash. Retry or go home.",            color: "oklch(0.58 0.2 15)" },
   ]
+
+  const s = {
+    page: {
+      margin: 0, minHeight: "100dvh", display: "flex", flexDirection: "column" as const,
+      alignItems: "center", justifyContent: "center",
+      backgroundColor: "oklch(0.08 0.005 0)", color: "oklch(0.93 0.005 90)",
+      fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+      padding: "1.5rem", textAlign: "center" as const, position: "relative" as const, overflow: "hidden",
+    },
+    glow: {
+      position: "absolute" as const, left: "50%", top: "50%",
+      transform: "translate(-50%,-50%)", width: "32rem", height: "32rem",
+      borderRadius: "50%", pointerEvents: "none" as const, zIndex: 0,
+      background: "radial-gradient(circle, oklch(0.7 0.18 55 / 0.06) 0%, transparent 70%)",
+    },
+    grid: {
+      position: "absolute" as const, inset: 0, opacity: 0.06, zIndex: 0,
+      backgroundImage: "linear-gradient(oklch(0.93 0.005 90 / 0.15) 1px, transparent 1px), linear-gradient(90deg, oklch(0.93 0.005 90 / 0.15) 1px, transparent 1px)",
+      backgroundSize: "32px 32px",
+    },
+  }
 
   return (
     <html lang="en">
-      <body
-        style={{
-          margin: 0,
-          minHeight: "100dvh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "oklch(0.08 0.005 0)",
-          color: "oklch(0.93 0.005 90)",
-          fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-          padding: "1.5rem",
-          textAlign: "center",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.75rem", color: "#fb923c", letterSpacing: "0.05em" }}>
-          // critical error
-        </p>
-        <h1 style={{ margin: "0.5rem 0 0", fontSize: "clamp(4rem,15vw,8rem)", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.02em" }}>
-          500
-        </h1>
-        <p style={{ margin: "0.5rem 0 0", fontSize: "1rem", color: "#64748b", maxWidth: "28rem" }}>
-          A critical error occurred in the application shell.
-        </p>
+      <body style={s.page}>
+        <div style={s.grid} />
+        <div style={s.glow} />
 
-        {/* Terminal card */}
-        <div style={{ marginTop: "2rem", width: "100%", maxWidth: "36rem", borderRadius: "0.75rem", border: "1px solid #1e293b", backgroundColor: "#0f172a", textAlign: "left", overflow: "hidden" }}>
-          {/* Title bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1rem", borderBottom: "1px solid #1e293b", backgroundColor: "#0a0f1a" }}>
-            <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", backgroundColor: "#ff5f57" }} />
-            <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", backgroundColor: "#febc2e" }} />
-            <div style={{ width: "0.75rem", height: "0.75rem", borderRadius: "50%", backgroundColor: "#28c840" }} />
-            <span style={{ marginLeft: "0.5rem", fontSize: "0.7rem", color: "#475569" }}>crash log — rejectmodders@is-a.dev</span>
-          </div>
-          {/* Lines */}
-          <div style={{ padding: "1.25rem", fontSize: "0.8rem", lineHeight: "1.8" }}>
-            {lines.map((line, i) => (
-              <div key={i} style={{ display: "flex", gap: "0.5rem" }}>
-                {line.prompt && (
-                  <span style={{ flexShrink: 0 }}>
-                    <span style={{ color: "#4ade80" }}>rejectmodders</span>
-                    <span style={{ color: "#475569" }}>@</span>
-                    <span style={{ color: "#22d3ee" }}>is-a.dev</span>
-                    <span style={{ color: "#475569" }}>:~$</span>
-                  </span>
-                )}
-                <span style={{ color: line.color }}>{line.text || "\u00a0"}</span>
-              </div>
-            ))}
-            <span style={{ display: "inline-block", width: "0.5rem", height: "1rem", borderRadius: "2px", backgroundColor: "#f87171", opacity: tick ? 1 : 0, transition: "opacity 0.1s" }} />
-          </div>
-        </div>
+        <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: "32rem" }}>
+          <p style={{ margin: 0, fontSize: "0.7rem", color: "#fb923c", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            // 500 · critical error
+          </p>
+          <h1 style={{ margin: "0.25rem 0 0", fontSize: "clamp(4.5rem, 18vw, 8rem)", fontWeight: 700, lineHeight: 1, letterSpacing: "-0.02em" }}>
+            500
+          </h1>
+          <p style={{ margin: "0.5rem 0 0", fontSize: "clamp(0.8rem, 3vw, 1rem)", color: "#64748b" }}>
+            A critical error occurred in the application shell.
+          </p>
 
-        {/* Actions */}
-        <div style={{ display: "flex", gap: "0.75rem", marginTop: "2rem", flexWrap: "wrap", justifyContent: "center" }}>
-          <button
-            onClick={reset}
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.25rem", borderRadius: "0.5rem", border: "1px solid rgba(251,146,60,0.5)", backgroundColor: "rgba(251,146,60,0.1)", color: "#fb923c", fontFamily: "inherit", fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer" }}
-          >
-            <RefreshCw style={{ width: "1rem", height: "1rem" }} />
-            retry
-          </button>
-          <a
-            href="/"
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.625rem 1.25rem", borderRadius: "0.5rem", border: "1px solid #1e293b", backgroundColor: "#0f172a", color: "#e2e8f0", fontFamily: "inherit", fontSize: "0.8125rem", fontWeight: 600, textDecoration: "none" }}
-          >
-            ~/ home
-          </a>
+          {/* Terminal card */}
+          <div style={{ marginTop: "2rem", borderRadius: "0.75rem", border: "1px solid #1e293b", backgroundColor: "#0a0f14", textAlign: "left", overflow: "hidden" }}>
+            {/* Title bar */}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.6rem 1rem", borderBottom: "1px solid #1e293b", backgroundColor: "#070c14" }}>
+              <div style={{ width: "0.7rem", height: "0.7rem", borderRadius: "50%", backgroundColor: "#ff5f57", flexShrink: 0 }} />
+              <div style={{ width: "0.7rem", height: "0.7rem", borderRadius: "50%", backgroundColor: "#febc2e", flexShrink: 0 }} />
+              <div style={{ width: "0.7rem", height: "0.7rem", borderRadius: "50%", backgroundColor: "#28c840", flexShrink: 0 }} />
+              <span style={{ marginLeft: "0.4rem", fontSize: "0.65rem", color: "#475569" }}>crash log — rejectmodders@is-a.dev</span>
+            </div>
+            {/* Lines */}
+            <div style={{ padding: "1rem 1.25rem", fontSize: "clamp(0.65rem, 2.5vw, 0.8rem)", lineHeight: 1.9 }}>
+              {lines.map((line, i) => (
+                <div key={i} style={{ display: "flex", gap: "0.4rem", flexWrap: "nowrap" }}>
+                  {line.prompt && (
+                    <span style={{ flexShrink: 0, whiteSpace: "nowrap" }}>
+                      <span style={{ color: "#4ade80" }}>rejectmodders</span>
+                      <span style={{ color: "#475569" }}>@</span>
+                      <span style={{ color: "#22d3ee" }}>is-a.dev</span>
+                      <span style={{ color: "#475569" }}>:~$</span>
+                    </span>
+                  )}
+                  <span style={{ color: line.color, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>{line.text || "\u00a0"}</span>
+                </div>
+              ))}
+              <span style={{
+                display: "inline-block", width: "0.45rem", height: "1rem",
+                borderRadius: "2px", backgroundColor: "#f87171",
+                opacity: cursor ? 1 : 0, transition: "opacity 0.1s",
+              }} />
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.5rem", flexWrap: "wrap", justifyContent: "center" }}>
+            <button
+              onClick={reset}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                padding: "0.65rem 1.25rem", borderRadius: "0.5rem",
+                border: "1px solid rgba(251,146,60,0.5)", backgroundColor: "rgba(251,146,60,0.1)",
+                color: "#fb923c", fontFamily: "inherit", fontSize: "0.8125rem",
+                fontWeight: 600, cursor: "pointer", transition: "background 0.2s",
+              }}
+            >
+              <RefreshCw style={{ width: "0.9rem", height: "0.9rem" }} />
+              retry
+            </button>
+            <a
+              href="/"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                padding: "0.65rem 1.25rem", borderRadius: "0.5rem",
+                border: "1px solid #1e293b", backgroundColor: "#0a0f14",
+                color: "#e2e8f0", fontFamily: "inherit", fontSize: "0.8125rem",
+                fontWeight: 600, textDecoration: "none",
+              }}
+            >
+              <Home style={{ width: "0.9rem", height: "0.9rem" }} />
+              back home
+            </a>
+          </div>
+
+          <p style={{ marginTop: "1.5rem", fontSize: "0.65rem", color: "#334155" }}>
+            persistent?{" "}
+            <a href="https://github.com/RejectModders/rejectmodders.is-a.dev/issues"
+              target="_blank" rel="noopener noreferrer"
+              style={{ color: "oklch(0.58 0.2 15 / 0.6)", textDecoration: "underline" }}>
+              open an issue
+            </a>
+          </p>
         </div>
       </body>
     </html>
   )
 }
-

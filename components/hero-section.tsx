@@ -4,7 +4,9 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 import { ChevronDown, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { Particles } from "@/components/particles"
+import dynamic from "next/dynamic"
+
+const Particles = dynamic(() => import("@/components/particles"), { ssr: false })
 // Letter animation — starts at 0.4s, each letter adds 0.025s
 const letterVariants = {
   hidden: { opacity: 0, y: 20 },
