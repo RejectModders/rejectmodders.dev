@@ -139,15 +139,26 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-                <a
-                  href="https://github.com/RejectModders"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMobileOpen(false)}
-                  className="mt-2 block rounded-md bg-primary px-3 py-2.5 text-center font-mono text-sm text-primary-foreground"
-                >
-                  GitHub
-                </a>
+                <div className="mt-2 flex gap-2">
+                  <a
+                    href="https://github.com/RejectModders"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 block rounded-md bg-primary px-3 py-2.5 text-center font-mono text-sm text-primary-foreground"
+                  >
+                    GitHub
+                  </a>
+                  {mounted && (
+                    <button
+                      onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setMobileOpen(false) }}
+                      className="flex items-center justify-center rounded-md border border-border px-3 py-2.5 font-mono text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                      title="Toggle theme"
+                    >
+                      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           </>

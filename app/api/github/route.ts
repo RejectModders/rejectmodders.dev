@@ -29,7 +29,7 @@ export async function GET() {
     const unique = all.filter(r => {
       if (seen.has(r.id)) return false
       seen.add(r.id)
-      return !r.fork && !r.archived && !SKIP.includes(r.name)
+      return !r.fork && !SKIP.includes(r.name)
     })
 
     return NextResponse.json(unique, {

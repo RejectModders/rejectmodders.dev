@@ -257,18 +257,9 @@ export function AboutPageContent() {
                       initial={{ width: 0 }}
                       animate={skillsInView ? { width: `${skill.level}%` } : {}}
                       transition={{ duration: 1.1, delay: 0.1 + i * 0.06, ease: "easeOut" }}
-                      className="relative h-full rounded-full bg-primary"
+                      className="h-full rounded-full bg-primary"
                       style={{ boxShadow: "0 0 8px oklch(0.58 0.2 15 / 0.5)" }}
-                    >
-                      {/* scan-line shimmer */}
-                      <motion.div
-                        className="absolute inset-y-0 w-6 rounded-full"
-                        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent)" }}
-                        initial={{ left: "-1.5rem" }}
-                        animate={skillsInView ? { left: "110%" } : {}}
-                        transition={{ duration: 0.6, delay: 0.9 + i * 0.06, ease: "easeOut" }}
-                      />
-                    </motion.div>
+                    />
                   </div>
                 </motion.div>
               ))}

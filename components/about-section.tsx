@@ -135,39 +135,39 @@ export function AboutSection() {
 								<span className="ml-2 font-mono text-xs text-muted-foreground">skills.json</span>
 							</div>
 
-							<div className="flex-1 overflow-y-auto space-y-4 pr-1" style={{ scrollbarWidth: "none" }}>
-								{[
-									{ name: "Python", level: 95 },
-									{ name: "Cybersecurity", level: 90 },
-									{ name: "C / C++", level: 80 },
-									{ name: "Discord Bots", level: 85 },
-									{ name: "C#", level: 75 },
-									{ name: "JavaScript", level: 70 },
-									{ name: "Linux", level: 85 },
-									{ name: "Git / GitHub", level: 90 },
-								].map((skill, i) => (
-									<motion.div
-										key={skill.name}
-										initial={{ opacity: 0, y: 6 }}
-										animate={isInView ? { opacity: 1, y: 0 } : {}}
-										transition={{ duration: 0.3, delay: 0.22 + i * 0.05, ease: "easeOut" }}
-									>
-										<div className="mb-1.5 flex items-center justify-between">
-											<span className="text-sm font-medium text-foreground">{skill.name}</span>
-											<span className="font-mono text-xs text-muted-foreground">{skill.level}%</span>
-										</div>
-										<div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-											<motion.div
-												initial={{ width: 0 }}
-												animate={isInView ? { width: `${skill.level}%` } : {}}
-												transition={{ duration: 1, delay: 0.3 + i * 0.05, ease: "easeOut" }}
-												className="h-full rounded-full bg-primary"
-												style={{ boxShadow: "0 0 8px oklch(0.58 0.2 15 / 0.4)" }}
-											/>
-										</div>
-									</motion.div>
-								))}
-							</div>
+                                                        <div className="flex-1 overflow-y-auto space-y-4 pr-1" style={{ scrollbarWidth: "none" }}>
+                                                                {[
+                                                                        { name: "Python", level: 95 },
+                                                                        { name: "Cybersecurity", level: 90 },
+                                                                        { name: "C / C++", level: 80 },
+                                                                        { name: "Discord Bots", level: 85 },
+                                                                        { name: "C#", level: 75 },
+                                                                        { name: "JavaScript", level: 70 },
+                                                                        { name: "Linux", level: 85 },
+                                                                        { name: "Git / GitHub", level: 90 },
+                                                                ].map((skill, i) => (
+                                                                        <motion.div
+                                                                                key={skill.name}
+                                                                                initial={{ opacity: 0, y: 6 }}
+                                                                                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                                                                                transition={{ duration: 0.3, delay: 0.22 + i * 0.05, ease: "easeOut" }}
+                                                                        >
+                                                                                <div className="mb-1.5 flex items-center justify-between">
+                                                                                        <span className="text-sm font-medium text-foreground">{skill.name}</span>
+                                                                                        <span className="font-mono text-xs text-muted-foreground">{skill.level}%</span>
+                                                                                </div>
+                                                                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+                                                                                        <motion.div
+                                                                                                initial={{ width: 0 }}
+                                                                                                animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
+                                                                                                transition={{ duration: 1, delay: 0.3 + i * 0.05, ease: "easeOut" }}
+                                                                                                className="h-full rounded-full bg-primary"
+                                                                                                style={{ boxShadow: "0 0 8px oklch(0.58 0.2 15 / 0.4)", willChange: "width" }}
+                                                                                        />
+                                                                                </div>
+                                                                        </motion.div>
+                                                                ))}
+                                                        </div>
 
 							<motion.div
 								initial={{ opacity: 0 }}

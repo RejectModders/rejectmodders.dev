@@ -137,7 +137,7 @@ export function ProjectsPageContent() {
       if (filter === "disutils" && repo.owner.login !== "disutils") return false
       if (filter === "vulnradar" && repo.owner.login !== "VulnRadar") return false
 
-      // Archived filter
+      // Archived filter — default shows active only, toggled shows archived only
       if (showArchived && !repo.archived) return false
       if (!showArchived && repo.archived) return false
 
@@ -262,7 +262,7 @@ export function ProjectsPageContent() {
               }`}
             >
               <Archive className="h-3.5 w-3.5" />
-              Archived
+              {showArchived ? "Hide Archived" : "Show Archived"}
             </button>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
