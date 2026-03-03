@@ -91,7 +91,8 @@ function aiMove(b:Board,color:Color):Board|null{
   return nb
 }
 
-const SYMBOLS:Record<PieceType,Record<Color,string>>={
+type SymbolMap = Record<PieceType, Record<Color, string>>
+const SYMBOLS: SymbolMap = {
   K:{w:"♔",b:"♚"},Q:{w:"♕",b:"♛"},R:{w:"♖",b:"♜"},B:{w:"♗",b:"♝"},N:{w:"♘",b:"♞"},P:{w:"♙",b:"♟"}
 }
 
