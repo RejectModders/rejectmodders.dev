@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   description: "A small arcade — classic games built in the browser.",
 }
 
+// Cache page for 2 hours - serve completely static from cache
+export const revalidate = 7200
+export const dynamic = 'force-static'
+
 export default function GamesPage() {
   return (
     <div className="relative min-h-screen">

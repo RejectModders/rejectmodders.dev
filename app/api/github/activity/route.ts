@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 
-export const revalidate = 7200
+// Cache activity for 5 minutes (300 seconds) for fresh activity updates
+export const revalidate = 300
 
 const USER = "RejectModders"
 const INTERESTING = ["PushEvent", "CreateEvent", "PullRequestEvent", "IssuesEvent", "WatchEvent"]
@@ -14,7 +15,7 @@ export async function GET() {
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": "2022-11-28",
         },
-        next: { revalidate: 7200 },
+        next: { revalidate: 300 },
       }
     )
     if (!res.ok) return NextResponse.json([], { status: res.status })
@@ -24,7 +25,7 @@ export async function GET() {
       : []
 
     return NextResponse.json(filtered, {
-      headers: { "Cache-Control": "public, s-maxage=7200, stale-while-revalidate=14400" },
+      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     })
   } catch {
     return NextResponse.json([], { status: 500 })

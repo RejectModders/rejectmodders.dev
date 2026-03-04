@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 
+// Cache avatars for 3 hours (10800 seconds)
+export const revalidate = 10800
+
 // Allowlist of trusted hosts to prevent open-proxy abuse
 const ALLOWED_HOSTS = [
   // GitHub avatars
@@ -21,7 +24,6 @@ const ALLOWED_HOSTS = [
   "spotify-recently-played-readme.vercel.app",
 ]
 
-export const runtime = "edge"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
@@ -44,7 +46,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const upstream = await fetch(url, {
-      next: { revalidate: false },
+      next: { revalidate: 10800 },
       headers: {
         "User-Agent": "rejectmodders.is-a.dev image-cache/1.0",
       },
@@ -61,10 +63,8 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
-        "CDN-Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
+        "Cache-Control": "public, s-maxage=10800, stale-while-revalidate=21600",
+        "CDN-Cache-Control": "public, max-age=10800",
         "Vary": "Accept",
       },
     })

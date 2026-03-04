@@ -9,7 +9,9 @@ import { CommandPalette } from '@/components/command-palette'
 import { FloatingCTA } from '@/components/floating-cta'
 import { BugFixToast } from '@/components/bug-fix-toast'
 import { ThemeProvider } from '@/components/theme-provider'
+import '@/lib/init-cron' // Import to initialize cron jobs on server startup
 import './globals.css'
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono' })
