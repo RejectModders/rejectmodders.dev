@@ -11,7 +11,7 @@ interface GHRepo { id: number; fork: boolean; archived: boolean; name: string }
 async function fetchJSON(url: string): Promise<GHRepo[]> {
   const res = await fetch(url, {
     headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
-    next: { revalidate: 7200 },
+    next: { revalidate: 7200, tags: ["github"] },
   })
   if (!res.ok) return []
   return res.json()

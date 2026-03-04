@@ -1,37 +1,16 @@
-// Server-side initialization for cron jobs
-// This module runs once when the server starts
+// Server-side initialization — warm caches once on cold start.
+// The 12-hour recurring schedule is handled by a Vercel Cron Job in vercel.json
+// (POST /api/cron/revalidate every 12 h) so setInterval is not needed.
 
-import { startCacheRevalidationCron } from './cache-revalidation'
+import { warmCachesOnStartup } from './cache-revalidation'
 
-// Flag to ensure we only initialize once per server instance
 let initialized = false
 
-/**
- * Initialize all server-side cron jobs
- * This function is called once when the application starts
- */
-async function initializeCronJobs() {
-  // Check if already initialized - prevents multiple initializations
-  if (initialized) {
-    return
-  }
-
-  // Set flag immediately to prevent race conditions
+if (!initialized) {
   initialized = true
-
-  console.log("[Init] Initializing cron jobs...")
-
-  try {
-    // Start the cache revalidation cron
-    await startCacheRevalidationCron()
-  } catch (error) {
-    console.error('[Init] Error initializing cron jobs:', error)
-  }
+  warmCachesOnStartup().catch((err) => {
+    console.error('[Init] Cache warm-up failed:', err)
+  })
 }
 
-// Initialize immediately when this module is loaded on server startup
-// Only runs once because of the initialized flag
-initializeCronJobs().catch((error) => {
-  console.error('[Init] Failed to initialize cron jobs:', error)
-})
 

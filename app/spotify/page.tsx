@@ -2,9 +2,9 @@ import { Navbar } from "@/components/navbar"
 import { FooterSection } from "@/components/footer-section"
 import { SpotifyPageContent } from "@/components/spotify-page-content"
 
-// Cache page for 2 hours - serve completely static from cache
-export const revalidate = 7200
-export const dynamic = 'force-static'
+// Spotify data changes constantly — never cache this page
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export default function SpotifyPage() {
   return (

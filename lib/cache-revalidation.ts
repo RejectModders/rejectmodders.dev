@@ -1,49 +1,36 @@
-let cronJobStarted = false
+let warmupDone = false
 
-// Function to revalidate all caches by calling the API endpoint
-async function revalidateAllCaches() {
+/**
+ * Warm the caches on first cold start by triggering the revalidation endpoint.
+ * Only runs once per server process lifetime — harmless on hot reloads.
+ *
+ * On Vercel, the actual 12-hour schedule should be driven by a Vercel Cron Job
+ * (vercel.json crons) pointing at POST /api/cron/revalidate — setInterval is
+ * unreliable across serverless cold starts.
+ */
+export async function warmCachesOnStartup() {
+  if (warmupDone) return
+  warmupDone = true
+
   const timestamp = new Date().toISOString()
-  console.log(`\n[Cache Clear] [${timestamp}] Triggering cache revalidation...`)
+  console.log(`[Cron] [${timestamp}] Warming caches on startup...`)
 
   try {
-    // Call the revalidate API endpoint
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
     const response = await fetch(`${baseUrl}/api/cron/revalidate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
     })
 
     if (!response.ok) {
       throw new Error(`API returned status ${response.status}`)
     }
 
-    const data = await response.json()
-    console.log(`[Cache Clear] [${timestamp}] Cache revalidation completed successfully`)
+    console.log(`[Cron] [${timestamp}] Cache warm-up completed successfully`)
   } catch (error) {
-    console.error(`[Cache Clear] [${timestamp}] Cache revalidation error:`, error)
+    // Non-fatal — caches will still populate on first real request
+    console.warn(`[Cron] [${timestamp}] Cache warm-up warning:`, error)
   }
 }
 
-// Start the cron job
-export async function startCacheRevalidationCron() {
-  // Only start once
-  if (cronJobStarted) {
-    return
-  }
-  cronJobStarted = true
-
-  console.log("[Cron] Cache Revalidation Task Started")
-  console.log("[Cron] Interval: Every 12 hours")
-  console.log("")
-
-  // Run immediately on start
-  await revalidateAllCaches()
-
-  // Then run every 12 hours
-  setInterval(async () => {
-    await revalidateAllCaches()
-  }, 12 * 60 * 60 * 1000)
-}
 

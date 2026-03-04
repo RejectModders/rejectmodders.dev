@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { motion, useInView } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
@@ -96,12 +96,9 @@ export function SpotifyPageContent() {
   const nowPlayingInView = useInView(nowPlayingRef, { once: true })
   const recentInView     = useInView(recentRef,     { once: true })
 
-  // Force fresh timestamps on mount to bypass all caching
+  // Fresh timestamp on mount ensures Spotify images bypass any CDN/browser cache
   const [timestamp, setTimestamp] = useState<number>(0)
-
-  useEffect(() => {
-    setTimestamp(Date.now())
-  }, [])
+  useEffect(() => { setTimestamp(Date.now()) }, [])
 
   return (
     <div ref={ref} className="relative pt-24 pb-16 md:pt-32 md:pb-24" style={{ overflow: "clip" }}>

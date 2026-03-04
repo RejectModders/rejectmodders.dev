@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// Cache avatars for 3 hours (10800 seconds)
-export const revalidate = 10800
+// Cache avatars for 2 hours — Next.js Data Cache keeps the upstream fetch result
+export const revalidate = 7200
 
 // Allowlist of trusted hosts to prevent open-proxy abuse
 const ALLOWED_HOSTS = [
@@ -24,7 +24,6 @@ const ALLOWED_HOSTS = [
   "spotify-recently-played-readme.vercel.app",
 ]
 
-
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
   const url = searchParams.get("url")
@@ -46,7 +45,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const upstream = await fetch(url, {
-      next: { revalidate: 10800 },
+      // Cache the upstream response in Next.js Data Cache for 2 hours.
+      // This means the actual outbound HTTP request fires at most once per
+      // 2-hour window — subsequent requests are served from the cache.
+      next: { revalidate: 7200, tags: ["avatars"] },
       headers: {
         "User-Agent": "rejectmodders.is-a.dev image-cache/1.0",
       },
@@ -63,8 +65,9 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, s-maxage=10800, stale-while-revalidate=21600",
-        "CDN-Cache-Control": "public, max-age=10800",
+        // Tell the browser (and CDN) to cache the response for 2 hours,
+        // and serve stale for up to 4 hours while revalidating in the background.
+        "Cache-Control": "public, max-age=7200, s-maxage=7200, stale-while-revalidate=14400",
         "Vary": "Accept",
       },
     })

@@ -58,7 +58,7 @@ async function resolveTwitterAvatar(twitter: string | null): Promise<string | nu
   if (!username) return null
   const url = `https://unavatar.io/twitter/${username}?json`
   try {
-    const res = await fetch(url, { next: { revalidate: 7200 } })
+    const res = await fetch(url, { next: { revalidate: 7200, tags: ["avatars"] } })
     if (res.ok) {
       const data = await res.json()
       // unavatar returns { url: "https://..." }

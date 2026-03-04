@@ -1,77 +1,66 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextResponse } from 'next/server'
 
-// List of page paths that can be revalidated
-// Note: API routes handle their own caching via 'export const revalidate = X'
-// and Cache-Control headers, so they don't need revalidatePath()
+// Page paths that benefit from revalidation (RSC output is cached)
 const REVALIDATABLE_PATHS = [
-  '/',
-  '/about',
-  '/friends',
-  '/projects',
-  '/games',
-  '/spotify',
+    '/',
+    '/about',
+    '/friends',
+    '/projects',
+    '/games',
+    '/spotify',
 ]
 
-// API routes to revalidate
-const REVALIDATABLE_API_ROUTES = [
-  '/api/github',
-  '/api/github/stats',
-  '/api/github/activity',
-  '/api/avatar',
-  '/api/status',
+// Cache tags used on fetch() calls — these bust the Next.js Data Cache
+// entries directly without needing revalidatePath on API routes.
+const REVALIDATABLE_TAGS = [
+    'github',
+    'github-stats',
+    'github-activity',
+    'avatars',
+    'status',
 ]
 
-export async function POST() {
-  const timestamp = new Date().toISOString()
+export async function POST(request: Request) {
+    const timestamp = new Date().toISOString()
 
-  try {
-    console.log(`\n[Cache Clear] [${timestamp}] Starting cache revalidation...`)
+    try {
+        console.log(`[Cache Clear] [${timestamp}] Starting cache revalidation...`)
 
-    // Revalidate all page paths
-    for (const path of REVALIDATABLE_PATHS) {
-      revalidatePath(path, 'layout')
+        // Revalidate page RSC outputs
+        for (const path of REVALIDATABLE_PATHS) {
+            revalidatePath(path, 'layout')
+        }
+
+        // Bust Data Cache entries by tag (works for API route fetch() caches)
+        // Second argument 'max' enables stale-while-revalidate behavior (Next.js 16+)
+        for (const tag of REVALIDATABLE_TAGS) {
+            revalidateTag(tag, 'max')
+        }
+
+        console.log(`[Cache Clear] [${timestamp}] Successfully revalidated ${REVALIDATABLE_PATHS.length} pages + ${REVALIDATABLE_TAGS.length} tags`)
+
+        return NextResponse.json(
+            {
+                success: true,
+                message: `Revalidated ${REVALIDATABLE_PATHS.length} pages and ${REVALIDATABLE_TAGS.length} cache tags`,
+                pages: REVALIDATABLE_PATHS,
+                tags: REVALIDATABLE_TAGS,
+                timestamp,
+            },
+            { status: 200 }
+        )
+    } catch (error) {
+        console.error(`[Cache Clear] [${timestamp}] Cache revalidation error:`, error)
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Cache revalidation failed',
+                error: error instanceof Error ? error.message : 'Unknown error',
+                timestamp,
+            },
+            { status: 500 }
+        )
     }
-
-    // Revalidate all API routes
-    for (const path of REVALIDATABLE_API_ROUTES) {
-      revalidatePath(path, 'layout')
-    }
-
-    const totalPaths = REVALIDATABLE_PATHS.length + REVALIDATABLE_API_ROUTES.length
-    console.log(`[Cache Clear] [${timestamp}] Cache revalidated for ${totalPaths} paths`)
-
-    console.log(`[Cache Clear] [${timestamp}] Pages:`)
-    REVALIDATABLE_PATHS.forEach((path) => {
-      console.log(`   - ${path}`)
-    })
-
-    console.log(`[Cache Clear] [${timestamp}] API Routes:`)
-    REVALIDATABLE_API_ROUTES.forEach((path) => {
-      console.log(`   - ${path}`)
-    })
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: `Cache revalidated for ${totalPaths} paths`,
-        pages: REVALIDATABLE_PATHS,
-        api_routes: REVALIDATABLE_API_ROUTES,
-        timestamp,
-      },
-      { status: 200 }
-    )
-  } catch (error) {
-    console.error(`[Cache Clear] [${timestamp}] Cache revalidation error:`, error)
-    return NextResponse.json(
-      {
-        success: false,
-        message: 'Cache revalidation failed',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp,
-      },
-      { status: 500 }
-    )
-  }
 }
 

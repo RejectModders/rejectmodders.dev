@@ -11,7 +11,7 @@ export async function GET() {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
     }
-    const opts = { headers, next: { revalidate: 7200 } }
+    const opts = { headers, next: { revalidate: 7200, tags: ["github-stats"] } }
 
     const [user, userRepos, ...orgRepos] = await Promise.all([
       fetch(`https://api.github.com/users/${USER}`, opts).then(r => r.json()),
