@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 
-export const revalidate = 600
+export const revalidate = 7200
 
 const USER = "RejectModders"
 const ORGS = ["disutils", "vulnradar"]
@@ -11,7 +11,7 @@ export async function GET() {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
     }
-    const opts = { headers, next: { revalidate: 600 } }
+    const opts = { headers, next: { revalidate: 7200 } }
 
     const [user, userRepos, ...orgRepos] = await Promise.all([
       fetch(`https://api.github.com/users/${USER}`, opts).then(r => r.json()),
@@ -33,7 +33,7 @@ export async function GET() {
 
     return NextResponse.json(
       { public_repos: user.public_repos ?? 0, followers: user.followers ?? 0, stars },
-      { headers: { "Cache-Control": "public, s-maxage=600, stale-while-revalidate=1200" } }
+      { headers: { "Cache-Control": "public, s-maxage=7200, stale-while-revalidate=14400" } }
     )
   } catch {
     return NextResponse.json({ public_repos: 0, followers: 0, stars: 0 }, { status: 500 })

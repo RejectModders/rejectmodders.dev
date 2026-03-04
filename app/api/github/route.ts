@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 
-export const revalidate = 300
+export const revalidate = 7200
 
 const ORGS = ["disutils", "vulnradar"]
 const USER = "RejectModders"
@@ -11,7 +11,7 @@ interface GHRepo { id: number; fork: boolean; archived: boolean; name: string }
 async function fetchJSON(url: string): Promise<GHRepo[]> {
   const res = await fetch(url, {
     headers: { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
-    next: { revalidate: 300 },
+    next: { revalidate: 7200 },
   })
   if (!res.ok) return []
   return res.json()
@@ -33,7 +33,7 @@ export async function GET() {
     })
 
     return NextResponse.json(unique, {
-      headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
+      headers: { "Cache-Control": "public, s-maxage=7200, stale-while-revalidate=14400" },
     })
   } catch {
     return NextResponse.json([], { status: 500 })
