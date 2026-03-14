@@ -11,19 +11,19 @@ import { EASE, EASE_BOUNCE, EASE_SMOOTH, DUR, DUR_SLOW, PAGE_START, PAGE_STEP, S
 
 // ── Animation helpers ────────────────────────────────────────────────────────
 const fadeUp = (delay = 0) => ({
-  initial:    { opacity: 0, y: 16 },
+  initial:    { opacity: 0, y: 12 },
   animate:    { opacity: 1, y: 0  },
   transition: { duration: DUR, delay, ease: EASE },
 })
 
 const fadeUpBlur = (delay = 0) => ({
-  initial:    { opacity: 0, y: 20, filter: "blur(4px)" },
-  animate:    { opacity: 1, y: 0, filter: "blur(0px)" },
-  transition: { duration: DUR_SLOW, delay, ease: EASE_SMOOTH },
+  initial:    { opacity: 0, y: 14 },
+  animate:    { opacity: 1, y: 0 },
+  transition: { duration: DUR, delay, ease: EASE },
 })
 
 const slideIn = (delay = 0, direction: "left" | "right" = "left") => ({
-  initial:    { opacity: 0, x: direction === "left" ? -24 : 24 },
+  initial:    { opacity: 0, x: direction === "left" ? -16 : 16 },
   animate:    { opacity: 1, x: 0 },
   transition: { duration: DUR, delay, ease: EASE },
 })
@@ -31,7 +31,7 @@ const slideIn = (delay = 0, direction: "left" | "right" = "left") => ({
 const underline = (delay = 0) => ({
   initial:    { scaleX: 0, opacity: 0 },
   animate:    { scaleX: 1, opacity: 1 },
-  transition: { duration: 0.4, delay, ease: "easeOut" },
+  transition: { duration: 0.2, delay, ease: "easeOut" },
   style:      { originX: 0 } as React.CSSProperties,
 })
 
@@ -189,9 +189,9 @@ export function AboutPageContent() {
         <div ref={heroRef} className="mb-20">
           {/* Page title */}
           <motion.div 
-            initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-            animate={heroInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-            transition={{ duration: DUR_SLOW, delay: PAGE_START, ease: EASE_SMOOTH }}
+  initial={{ opacity: 0, y: 14 }}
+  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+  transition={{ duration: DUR, delay: PAGE_START, ease: EASE }}
             className="mb-8"
           >
             <motion.span 
@@ -216,9 +216,9 @@ export function AboutPageContent() {
             >
               {stats?.avatar_url && (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: PAGE_START + 0.15, ease: EASE_BOUNCE }}
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+  transition={{ duration: 0.2, delay: PAGE_START + 0.05, ease: EASE }}
                   className="relative mb-6"
                 >
                   <motion.div 
@@ -347,9 +347,9 @@ export function AboutPageContent() {
         <div ref={skillsRef} className="mb-20">
           <SectionHeader tag="// skills" title="Tech Stack" inView={skillsInView} />
           <motion.div 
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            animate={skillsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ duration: DUR_SLOW, delay: 0.1, ease: EASE }}
+  initial={{ opacity: 0, y: 12 }}
+  animate={skillsInView ? { opacity: 1, y: 0 } : {}}
+  transition={{ duration: DUR, delay: 0.05, ease: EASE }}
             className="card-hover rounded-xl border border-border bg-card p-6 md:p-8"
           >
             <div className="mb-6 flex items-center gap-2">
@@ -392,9 +392,9 @@ export function AboutPageContent() {
                   </div>
                   <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
                     <motion.div
-                      initial={{ width: 0 }}
-                      animate={skillsInView ? { width: `${Math.min(skill.level, 100)}%` } : {}}
-                      transition={{ duration: 0.6, delay: 0.25 + i * SCROLL_STEP, ease: "easeOut" }}
+  initial={{ width: 0 }}
+  animate={skillsInView ? { width: `${Math.min(skill.level, 100)}%` } : {}}
+  transition={{ duration: 0.3, delay: 0.1 + i * 0.02, ease: "easeOut" }}
                       className="h-full rounded-full bg-primary"
                       style={{ boxShadow: "0 0 8px color-mix(in oklch, var(--primary) 50%, transparent)" }}
                     />
@@ -416,10 +416,10 @@ export function AboutPageContent() {
                 target="_blank" 
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                animate={orgsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                transition={{ duration: DUR, delay: 0.15 + i * 0.1, ease: EASE }}
-                whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.98 }}
+  animate={orgsInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+  transition={{ duration: DUR, delay: 0.08 + i * 0.04, ease: EASE }}
+  whileHover={{ y: -3, scale: 1.01, transition: { duration: 0.1 } }}
+  whileTap={{ scale: 0.99 }}
                 className="card-hover group rounded-xl border border-border bg-card p-6 md:p-8"
               >
                 <div className="mb-4 flex items-center gap-4">
@@ -462,9 +462,9 @@ export function AboutPageContent() {
           <div className="relative">
             {/* Vertical line */}
             <motion.div
-              initial={{ scaleY: 0, opacity: 0 }} 
-              animate={timelineInView ? { scaleY: 1, opacity: 1 } : {}}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+  initial={{ scaleY: 0, opacity: 0 }}
+  animate={timelineInView ? { scaleY: 1, opacity: 1 } : {}}
+  transition={{ duration: 0.4, ease: "easeOut" }}
               style={{ transformOrigin: "top" }}
               className="absolute left-5 top-0 bottom-0 w-px bg-border md:left-1/2 md:-translate-x-px"
             />

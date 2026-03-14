@@ -184,15 +184,15 @@ export function ProjectsPageContent() {
       <div className="mx-auto max-w-6xl px-4">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-          animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: DUR_SLOW, delay: PAGE_START, ease: EASE_SMOOTH }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: DUR, delay: PAGE_START, ease: EASE }}
           className="mb-8"
         >
           <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.3, delay: PAGE_START, ease: EASE_BOUNCE }}
+            transition={{ duration: 0.15, delay: PAGE_START, ease: EASE }}
             className="font-mono text-sm text-primary inline-block"
           >
             {'// projects'}
@@ -201,9 +201,9 @@ export function ProjectsPageContent() {
             All <span className="text-gradient">Projects</span>
           </h1>
           <motion.p 
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: DUR, delay: PAGE_START + 0.1, ease: EASE }}
+            transition={{ duration: DUR, delay: PAGE_START + 0.05, ease: EASE }}
             className="mt-4 max-w-2xl text-lg text-muted-foreground"
           >
             Stuff I've built across my personal account and both orgs. Security tools, Discord bots, random side projects. A bit of everything.
@@ -225,11 +225,11 @@ export function ProjectsPageContent() {
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 16, scale: 0.9 }}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ delay: PAGE_START + PAGE_STEP * 2 + i * 0.06, type: "spring", stiffness: 350, damping: 20 }}
-              whileHover={{ scale: 1.05, y: -2, transition: { duration: 0.15 } }}
-              whileTap={{ scale: 0.97 }}
+              transition={{ delay: PAGE_START + PAGE_STEP * 2 + i * 0.03, duration: 0.2, ease: EASE }}
+              whileHover={{ scale: 1.03, transition: { duration: 0.1 } }}
+              whileTap={{ scale: 0.98 }}
               className="card-hover rounded-lg border border-border bg-card p-4 text-center cursor-default"
             >
               <div className="font-mono text-2xl font-bold text-primary">
@@ -339,7 +339,7 @@ export function ProjectsPageContent() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.15 }}
               className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
             >
               {filteredRepos.map((repo, i) => (
@@ -348,11 +348,11 @@ export function ProjectsPageContent() {
                   href={repo.html_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  initial={{ opacity: 0, y: 24, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: DUR, delay: Math.min(i * SCROLL_STEP, 0.4), ease: EASE }}
-                  whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: Math.min(i * 0.02, 0.2), ease: EASE }}
+                  whileHover={{ y: -3, scale: 1.01, transition: { duration: 0.1 } }}
+                  whileTap={{ scale: 0.99 }}
                   className="card-hover group relative flex flex-col rounded-xl border border-border bg-card p-6"
                 >
                   {/* Archived badge */}

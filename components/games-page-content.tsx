@@ -142,15 +142,15 @@ export function GamesPageContent() {
 
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: DUR_SLOW, delay: PAGE_START, ease: EASE_SMOOTH }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: DUR, delay: PAGE_START, ease: EASE }}
           className="mb-10 text-center"
         >
           <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: PAGE_START, ease: EASE_BOUNCE }}
+            transition={{ duration: 0.15, delay: PAGE_START, ease: EASE }}
             className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-primary/20 bg-primary/5"
           >
             <Gamepad2 className="h-3.5 w-3.5 text-primary" />
@@ -160,9 +160,9 @@ export function GamesPageContent() {
             <span className="text-primary">Games</span>
           </h1>
           <motion.p 
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: DUR, delay: PAGE_START + 0.12, ease: EASE }}
+            transition={{ duration: DUR, delay: PAGE_START + 0.05, ease: EASE }}
             className="text-muted-foreground font-mono text-sm"
           >
             {GAMES.length} games · all built in the browser · no installs
@@ -213,11 +213,11 @@ export function GamesPageContent() {
                 return (
                   <motion.div
                     key={id}
-                    initial={{ opacity: 0, y: 20, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: DUR, delay: Math.min(i * SCROLL_STEP, 0.35), ease: EASE }}
-                    whileHover={isEnabled ? { y: -4, scale: 1.02, transition: { duration: 0.2 } } : {}}
-                    whileTap={isEnabled ? { scale: 0.98 } : {}}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: Math.min(i * 0.02, 0.15), ease: EASE }}
+                    whileHover={isEnabled ? { y: -3, scale: 1.01, transition: { duration: 0.1 } } : {}}
+                    whileTap={isEnabled ? { scale: 0.99 } : {}}
                     onMouseEnter={() => isEnabled && setHovered(id)}
                     onMouseLeave={() => setHovered(null)}
                     onClick={() => isEnabled && router.push(`/games/${id}`)}

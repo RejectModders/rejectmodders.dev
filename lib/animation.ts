@@ -8,36 +8,36 @@
  */
 
 // ── Timing Constants ─────────────────────────────────────────────────────────
-/** Standard easing curve (smooth ease-out) */
-export const EASE = [0.22, 1, 0.36, 1] as const
+/** Standard easing curve (snappy ease-out) */
+export const EASE = [0.16, 1, 0.3, 1] as const
 
 /** Snappy ease for micro-interactions */
-export const EASE_SNAPPY = [0.32, 0.72, 0, 1] as const
+export const EASE_SNAPPY = [0.23, 1, 0.32, 1] as const
 
 /** Smooth ease for larger movements */
-export const EASE_SMOOTH = [0.4, 0, 0.2, 1] as const
+export const EASE_SMOOTH = [0.25, 0.1, 0.25, 1] as const
 
 /** Bounce ease for playful elements */
-export const EASE_BOUNCE = [0.34, 1.56, 0.64, 1] as const
+export const EASE_BOUNCE = [0.34, 1.4, 0.64, 1] as const
 
-/** Base duration - balanced */
-export const DUR = 0.4
+/** Base duration - fast and snappy */
+export const DUR = 0.25
 
 /** Fast duration for micro-interactions */
-export const DUR_FAST = 0.2
+export const DUR_FAST = 0.12
 
 /** Slow duration for dramatic entrances */
-export const DUR_SLOW = 0.6
+export const DUR_SLOW = 0.35
 
 /** Navbar animation duration */
-export const NAV_DUR = 0.35
+export const NAV_DUR = 0.25
 
-/** Page-load sequence: navbar finishes ~0.35s, content starts at 0.45s */
-export const PAGE_START = 0.45
-export const PAGE_STEP = 0.08
+/** Page-load sequence: navbar finishes ~0.25s, content starts at 0.15s */
+export const PAGE_START = 0.15
+export const PAGE_STEP = 0.04
 
-/** Scroll-triggered stagger */
-export const SCROLL_STEP = 0.06
+/** Scroll-triggered stagger - faster */
+export const SCROLL_STEP = 0.03
 
 // ── Reusable Variants ────────────────────────────────────────────────────────
 /** Fade up animation - most common pattern */
@@ -169,28 +169,28 @@ export const fastStaggerContainer = {
 }
 
 // ── Hover & Gesture Variants ─────────────────────────────────────────────────
-/** Card hover effect */
+/** Card hover effect - instant response */
 export const cardHover = {
   rest: { scale: 1, y: 0 },
   hover: { 
     scale: 1.02, 
-    y: -4,
-    transition: { duration: 0.2, ease: EASE_SNAPPY }
+    y: -3,
+    transition: { duration: 0.1, ease: EASE_SNAPPY }
   },
-  tap: { scale: 0.98 },
+  tap: { scale: 0.98, transition: { duration: 0.08 } },
 }
 
-/** Button hover effect */
+/** Button hover effect - instant */
 export const buttonHover = {
   rest: { scale: 1 },
-  hover: { scale: 1.02, transition: { duration: 0.15 } },
-  tap: { scale: 0.97 },
+  hover: { scale: 1.02, transition: { duration: 0.08 } },
+  tap: { scale: 0.97, transition: { duration: 0.06 } },
 }
 
-/** Subtle lift effect */
+/** Subtle lift effect - immediate */
 export const subtleLift = {
   rest: { y: 0 },
-  hover: { y: -2, transition: { duration: 0.2, ease: EASE_SNAPPY } },
+  hover: { y: -2, transition: { duration: 0.1, ease: EASE_SNAPPY } },
 }
 
 // ── Utility Functions ────────────────────────────────────────────────────────
@@ -209,10 +209,10 @@ export const getChoreographyDelay = (
 ) => {
   const bases = {
     hero: PAGE_START,
-    primary: PAGE_START + 0.1,
-    secondary: PAGE_START + 0.2,
-    tertiary: PAGE_START + 0.3,
-    ambient: PAGE_START + 0.5,
+    primary: PAGE_START + 0.05,
+    secondary: PAGE_START + 0.1,
+    tertiary: PAGE_START + 0.15,
+    ambient: PAGE_START + 0.25,
   }
   return bases[order] + index * PAGE_STEP
 }

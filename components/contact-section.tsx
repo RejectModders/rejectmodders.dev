@@ -73,25 +73,25 @@ export function ContactSection() {
       />
 
       <div className="mx-auto max-w-5xl px-4">
-        {/* Header with staggered entrance */}
+        {/* Header with fast staggered entrance */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} 
+          initial={{ opacity: 0, y: 14 }} 
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: DUR_SLOW, ease: EASE }}
+          transition={{ duration: DUR, ease: EASE }}
           className="mb-10 sm:mb-12 text-center"
         >
           <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.3, delay: 0.1, ease: EASE_BOUNCE }}
+            transition={{ duration: 0.15, delay: 0.03, ease: EASE }}
             className="font-mono text-sm text-primary inline-block"
           >
             {'// connect'}
           </motion.span>
           <motion.h2 
-            initial={{ opacity: 0, y: 16, filter: "blur(4px)" }}
-            animate={isInView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-            transition={{ duration: DUR_SLOW, delay: 0.15, ease: EASE_SMOOTH }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: DUR, delay: 0.06, ease: EASE }}
             className="mt-2 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl text-balance"
           >
             {"Let's Work Together"}
@@ -99,34 +99,34 @@ export function ContactSection() {
           <motion.div
             initial={{ scaleX: 0, opacity: 0 }} 
             animate={isInView ? { scaleX: 1, opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.25, ease: EASE }} 
+            transition={{ duration: 0.2, delay: 0.1, ease: EASE }} 
             style={{ originX: 0.5 }}
             className="mx-auto mt-3 h-1 w-20 rounded-full bg-primary"
           />
           <motion.p 
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: DUR, delay: 0.35, ease: EASE }}
+            transition={{ duration: DUR, delay: 0.12, ease: EASE }}
             className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed"
           >
             Whether it's a project collab, security stuff, or you just want to chat, I'm usually around.
           </motion.p>
         </motion.div>
 
-        {/* Card - slide up with scale */}
+        {/* Card - fast slide up */}
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.98 }} 
-          animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ duration: DUR_SLOW, delay: 0.2, ease: EASE }}
+          initial={{ opacity: 0, y: 16 }} 
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: DUR, delay: 0.08, ease: EASE }}
           className="card-hover relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 md:p-10"
         >
           {/* Inner glow */}
           <div className="pointer-events-none absolute inset-0 rounded-2xl"
             style={{ background: "linear-gradient(135deg, oklch(0.45 0.18 20 / 0.06) 0%, transparent 50%)" }} />
           <motion.div 
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 1, delay: 0.4, ease: EASE_SMOOTH }}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.3, delay: 0.15, ease: EASE }}
             className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-primary/5 blur-3xl" 
           />
 
@@ -136,9 +136,9 @@ export function ContactSection() {
             <div className="flex flex-col items-center md:items-start">
               {stats?.avatar_url && (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 0.3, ease: EASE_BOUNCE }}
+                  transition={{ duration: 0.2, delay: 0.1, ease: EASE }}
                   className="relative mb-4"
                 >
                   <motion.div 
