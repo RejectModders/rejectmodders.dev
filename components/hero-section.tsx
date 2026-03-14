@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
-import { ChevronDown, ArrowRight, Shield, Terminal } from "lucide-react"
+import { ChevronDown, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { GITHUB_URL, TECH_TAGS } from "@/config/constants"
@@ -143,7 +143,6 @@ export function HeroSection() {
             className="w-full sm:w-auto"
           >
             <Link href="/projects" className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 font-semibold text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/25 transition-all duration-200 hover:-translate-y-0.5 sm:w-auto">
-              <Shield className="h-4 w-4" />
               View Projects
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
@@ -153,8 +152,7 @@ export function HeroSection() {
             whileTap={{ scale: 0.97 }}
             className="w-full sm:w-auto"
           >
-            <Link href="/about" className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/50 px-7 py-3.5 font-semibold text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-card transition-all duration-200 hover:-translate-y-0.5 sm:w-auto">
-              <Terminal className="h-4 w-4 text-primary" />
+            <Link href="/about" className="inline-flex w-full items-center justify-center rounded-xl border border-border bg-card/50 px-7 py-3.5 font-semibold text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-card transition-all duration-200 hover:-translate-y-0.5 sm:w-auto">
               About Me
             </Link>
           </motion.div>
@@ -164,7 +162,7 @@ export function HeroSection() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/50 px-7 py-3.5 font-semibold text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-card transition-all duration-200 hover:-translate-y-0.5 sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl border border-border bg-card/50 px-7 py-3.5 font-semibold text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-card transition-all duration-200 hover:-translate-y-0.5 sm:w-auto"
           >
             GitHub
           </motion.a>
