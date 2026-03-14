@@ -1,10 +1,8 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
-import { useRef, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Star, GitFork, ArrowUpRight, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { EASE, DUR, SCROLL_STEP } from "@/lib/animation"
 
 interface Repo {
   id: number
@@ -36,8 +34,6 @@ const languageColors: Record<string, string> = {
 }
 
 export function ProjectsSection() {
-  const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { once: true })
   const [repos, setRepos] = useState<Repo[]>([])
 
   useEffect(() => {
@@ -62,60 +58,26 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section ref={ref} id="projects" className="relative py-24 md:py-32" style={{ overflow: "clip" }}>
+    <section id="projects" className="relative py-24 md:py-32" style={{ overflow: "clip" }}>
       <div className="mx-auto max-w-6xl px-4">
         {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: DUR, ease: EASE }}
-          className="mb-12"
-        >
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: DUR, delay: 0.05, ease: EASE }}
-            className="font-mono text-sm text-primary"
-          >
-            {'// projects'}
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 8 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: DUR, delay: 0.1, ease: EASE }}
-            className="mt-2 text-3xl font-bold text-foreground md:text-4xl"
-          >
-            Featured Projects
-          </motion.h2>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.25, delay: 0.15, ease: "easeOut" }}
-            style={{ originX: 0 }}
-            className="mt-2 h-1 w-16 rounded-full bg-primary"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: DUR, delay: 0.2, ease: EASE }}
-            className="mt-4 max-w-lg text-muted-foreground"
-          >
+        <div className="mb-12">
+          <span className="font-mono text-sm text-primary">{'// projects'}</span>
+          <h2 className="mt-2 text-3xl font-bold text-foreground md:text-4xl">Featured Projects</h2>
+          <div className="mt-2 h-1 w-16 rounded-full bg-primary" />
+          <p className="mt-4 max-w-lg text-muted-foreground">
             Open source projects from my personal account and organizations, fetched live from GitHub.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
         {/* Projects grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {repos.map((repo, i) => (
-            <motion.a
+          {repos.map((repo) => (
+            <a
               key={repo.id}
               href={repo.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 12 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: DUR, delay: 0.1 + i * SCROLL_STEP, ease: EASE }}
-              whileTap={{ scale: 0.98 }}
               className="card-hover group relative flex flex-col rounded-xl border border-border bg-card p-5"
             >
               {/* Owner + name */}
@@ -129,11 +91,11 @@ export function ProjectsSection() {
                   <span className="block font-mono text-[10px] text-muted-foreground/70">
                     {repo.owner.login}
                   </span>
-                  <h3 className="truncate font-mono text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                  <h3 className="truncate font-mono text-sm font-semibold text-foreground group-hover:text-primary">
                     {repo.name}
                   </h3>
                 </div>
-                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:opacity-100" />
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100" />
               </div>
 
               {/* Description */}
@@ -165,25 +127,20 @@ export function ProjectsSection() {
                   </span>
                 )}
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
 
         {/* View all link */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: DUR, delay: 0.4, ease: EASE }}
-            className="mt-10 text-center"
+        <div className="mt-10 text-center">
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-6 py-3 font-mono text-sm text-primary hover:bg-primary/10"
           >
-            <Link
-              href="/projects"
-              className="group inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-6 py-3 font-mono text-sm text-primary transition-all duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-[0_0_20px_color-mix(in_oklch,var(--primary)_15%,transparent)]"
-            >
-              View all projects
-              <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" />
-            </Link>
-          </motion.div>
+            View all projects
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
     </section>
   )
