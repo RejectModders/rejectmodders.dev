@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { Shield, Zap, FileSearch, ArrowRight, ExternalLink, CheckCircle2 } from "lucide-react"
 
 const features = [
@@ -130,12 +129,8 @@ function TerminalLines() {
           {line.text || <span>&nbsp;</span>}
         </div>
       ))}
-      {/* Blinking cursor */}
-      <motion.span
-        animate={{ opacity: [1, 0, 1] }}
-        transition={{ duration: 1, repeat: Infinity }}
-        className="inline-block h-4 w-2 rounded-sm bg-primary"
-      />
+      {/* Blinking cursor - CSS animation */}
+      <span className="inline-block h-4 w-2 rounded-sm bg-primary animate-pulse" />
     </div>
   )
 }
