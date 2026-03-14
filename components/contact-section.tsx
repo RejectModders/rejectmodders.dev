@@ -1,12 +1,15 @@
 "use client"
 
 import { useRef, useEffect, useState } from "react"
+import { motion, useInView } from "framer-motion"
 import { Github, ExternalLink, Mail, MapPin, Users, BookOpen, ArrowRight, MessageCircle, Shield } from "lucide-react"
 import { GITHUB_URL, GITHUB_USER_API, VULNRADAR_URL, getEmail, SITE_LOCATION } from "@/config/constants"
 
 interface GitHubStats { public_repos: number; followers: number; following: number; avatar_url: string }
 
 export function ContactSection() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [stats, setStats] = useState<GitHubStats | null>(null)
 
   useEffect(() => {
@@ -27,43 +30,89 @@ export function ContactSection() {
   ] : []
 
   return (
-    <section id="contact" className="relative py-16 sm:py-24 md:py-32 scroll-mt-20" style={{ overflow: "clip" }}>
-      {/* Ambient orbs - static */}
-      <div 
+    <section ref={ref} id="contact" className="relative py-16 sm:py-24 md:py-32 scroll-mt-20" style={{ overflow: "clip" }}>
+      {/* Ambient orbs */}
+      <motion.div
+        initial={false}
+        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
         style={{ background: "radial-gradient(circle, oklch(0.45 0.18 20 / 0.08) 0%, transparent 70%)" }} 
       />
-      <div 
+      <motion.div
+        initial={false}
+        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
         className="pointer-events-none absolute right-0 top-1/4 -z-10 h-64 w-64 rounded-full blur-3xl"
         style={{ background: "radial-gradient(circle, oklch(0.45 0.18 20 / 0.04) 0%, transparent 70%)" }} 
       />
 
       <div className="mx-auto max-w-5xl px-4">
         {/* Header */}
-        <div className="mb-10 sm:mb-12 text-center">
-          <span className="font-mono text-sm text-primary inline-block">
+        <motion.div
+          initial={false}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-10 sm:mb-12 text-center"
+        >
+          <motion.span
+            initial={false}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="font-mono text-sm text-primary inline-block"
+          >
             {'// connect'}
-          </span>
-          <h2 className="mt-2 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl text-balance">
+          </motion.span>
+          <motion.h2
+            initial={false}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: 0.4, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-2 text-3xl font-bold text-foreground sm:text-4xl md:text-5xl text-balance"
+          >
             {"Let's Work Together"}
-          </h2>
-          <div className="mx-auto mt-3 h-1 w-20 rounded-full bg-primary" />
-          <p className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed">
+          </motion.h2>
+          <motion.div
+            initial={false}
+            animate={isInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mx-auto mt-3 h-1 w-20 rounded-full bg-primary"
+          />
+          <motion.p
+            initial={false}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            transition={{ duration: 0.4, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-4 text-muted-foreground max-w-lg mx-auto leading-relaxed"
+          >
             Whether it's a project collab, security stuff, or you just want to chat, I'm usually around.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Card */}
-        <div className="card-hover relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 md:p-10">
+        <motion.div
+          initial={false}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+          className="card-hover relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 md:p-10"
+        >
           {/* Inner glow */}
           <div className="pointer-events-none absolute inset-0 rounded-2xl"
             style={{ background: "linear-gradient(135deg, oklch(0.45 0.18 20 / 0.06) 0%, transparent 50%)" }} />
-          <div className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-primary/5 blur-3xl" />
+          <motion.div
+            initial={false}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-primary/5 blur-3xl"
+          />
 
           {/* Main content */}
           <div className="relative grid gap-8 md:grid-cols-2 md:gap-10">
             {/* Left side - Avatar and info */}
-            <div className="flex flex-col items-center md:items-start">
+            <motion.div
+              initial={false}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+              transition={{ duration: 0.4, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+              className="flex flex-col items-center md:items-start"
+            >
               {stats?.avatar_url && (
                 <div className="relative mb-4">
                   <img 
@@ -86,9 +135,12 @@ export function ContactSection() {
               {/* Stats */}
               {stats && (
                 <div className="mt-6 grid w-full grid-cols-3 gap-2 sm:gap-3">
-                  {statItems.map((s) => (
-                    <div 
+                  {statItems.map((s, i) => (
+                    <motion.div
                       key={s.label}
+                      initial={false}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                      transition={{ duration: 0.3, delay: 0.3 + i * 0.05, ease: [0.25, 0.1, 0.25, 1] }}
                       className="card-hover rounded-xl border border-border bg-secondary/50 p-3 text-center cursor-default"
                     >
                       <div className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground uppercase tracking-wide">
@@ -97,18 +149,23 @@ export function ContactSection() {
                       <div className="mt-1 font-mono text-xl font-bold text-foreground">
                         {s.value}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Right side - Action buttons */}
             <div className="flex flex-col gap-3">
-              <p className="mb-2 font-mono text-xs text-primary/70 hidden md:block">
+              <motion.p
+                initial={false}
+                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+                transition={{ duration: 0.3, delay: 0.25 }}
+                className="mb-2 font-mono text-xs text-primary/70 hidden md:block"
+              >
                 // get in touch
-              </p>
-              {links.map((link) => {
+              </motion.p>
+              {links.map((link, i) => {
                 const isFirst = link.primary
                 const sharedClass = `group flex items-center gap-4 rounded-xl px-5 py-4 font-medium border ${
                   isFirst
@@ -128,7 +185,12 @@ export function ContactSection() {
                   </>
                 )
                 return (
-                  <div key={link.label}>
+                  <motion.div
+                    key={link.label}
+                    initial={false}
+                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                    transition={{ duration: 0.4, delay: 0.3 + i * 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+                  >
                     {link.isEmail ? (
                       <button
                         onClick={() => { window.location.href = `mailto:${link.href}` }}
@@ -146,18 +208,23 @@ export function ContactSection() {
                         {inner}
                       </a>
                     )}
-                  </div>
+                  </motion.div>
                 )
               })}
               
               {/* Quick message */}
-              <div className="mt-4 rounded-xl border border-dashed border-border/50 bg-muted/30 p-4 text-center">
+              <motion.div
+                initial={false}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.4, delay: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
+                className="mt-4 rounded-xl border border-dashed border-border/50 bg-muted/30 p-4 text-center"
+              >
                 <MessageCircle className="mx-auto mb-2 h-5 w-5 text-muted-foreground/40" />
                 <p className="text-xs text-muted-foreground/60">Response time: Usually within 24 hours</p>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

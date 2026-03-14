@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useRef, useEffect, useState } from "react"
+import { motion, useInView } from "framer-motion"
 import { Star, GitFork, ArrowUpRight, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -34,6 +35,8 @@ const languageColors: Record<string, string> = {
 }
 
 export function ProjectsSection() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [repos, setRepos] = useState<Repo[]>([])
 
   useEffect(() => {
@@ -58,23 +61,55 @@ export function ProjectsSection() {
   }, [])
 
   return (
-    <section id="projects" className="relative py-24 md:py-32" style={{ overflow: "clip" }}>
+    <section ref={ref} id="projects" className="relative py-24 md:py-32" style={{ overflow: "clip" }}>
       <div className="mx-auto max-w-6xl px-4">
         {/* Section header */}
-        <div className="mb-12">
-          <span className="font-mono text-sm text-primary">{'// projects'}</span>
-          <h2 className="mt-2 text-3xl font-bold text-foreground md:text-4xl">Featured Projects</h2>
-          <div className="mt-2 h-1 w-16 rounded-full bg-primary" />
-          <p className="mt-4 max-w-lg text-muted-foreground">
+        <motion.div
+          initial={false}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mb-12"
+        >
+          <motion.span
+            initial={false}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="font-mono text-sm text-primary"
+          >
+            {'// projects'}
+          </motion.span>
+          <motion.h2
+            initial={false}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+            transition={{ duration: 0.4, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-2 text-3xl font-bold text-foreground md:text-4xl"
+          >
+            Featured Projects
+          </motion.h2>
+          <motion.div
+            initial={false}
+            animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-2 h-1 w-16 origin-left rounded-full bg-primary"
+          />
+          <motion.p
+            initial={false}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-4 max-w-lg text-muted-foreground"
+          >
             Open source projects from my personal account and organizations, fetched live from GitHub.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Projects grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {repos.map((repo) => (
-            <a
+          {repos.map((repo, i) => (
+            <motion.a
               key={repo.id}
+              initial={false}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              transition={{ duration: 0.4, delay: 0.15 + i * 0.05, ease: [0.25, 0.1, 0.25, 1] }}
               href={repo.html_url}
               target="_blank"
               rel="noopener noreferrer"
@@ -127,12 +162,17 @@ export function ProjectsSection() {
                   </span>
                 )}
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
 
         {/* View all link */}
-        <div className="mt-10 text-center">
+        <motion.div
+          initial={false}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.4, delay: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mt-10 text-center"
+        >
           <Link
             href="/projects"
             className="group inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-6 py-3 font-mono text-sm text-primary hover:bg-primary/10"
@@ -140,7 +180,7 @@ export function ProjectsSection() {
             View all projects
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1" />
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
