@@ -77,9 +77,9 @@ function SpotifyImage({ src, alt, skeletonRows }: { src: string; alt: string; sk
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: loaded ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: EASE }}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: loaded ? 1 : 0 }}
+  transition={{ duration: 0.2, ease: EASE }}
         className="h-auto w-full rounded-xl"
         style={{ display: "block" }}
       />
@@ -88,13 +88,13 @@ function SpotifyImage({ src, alt, skeletonRows }: { src: string; alt: string; sk
 }
 
 export function SpotifyPageContent() {
-  const ref           = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const nowPlayingRef = useRef<HTMLDivElement>(null)
-  const recentRef     = useRef<HTMLDivElement>(null)
+  const recentRef = useRef<HTMLDivElement>(null)
 
-  const isInView         = useInView(ref,           { once: true })
+  const isInView = useInView(ref, { once: true })
   const nowPlayingInView = useInView(nowPlayingRef, { once: true })
-  const recentInView     = useInView(recentRef,     { once: true })
+  const recentInView = useInView(recentRef, { once: true })
 
   // Fresh timestamp on mount ensures Spotify images bypass any CDN/browser cache
   const [timestamp, setTimestamp] = useState<number>(0)
@@ -110,10 +110,10 @@ export function SpotifyPageContent() {
       />
 
       {/* Floating notes */}
-      <FloatingNote delay={0}   x="10%" icon="♪" />
+      <FloatingNote delay={0} x="10%" icon="♪" />
       <FloatingNote delay={1.2} x="25%" icon="♫" />
       <FloatingNote delay={0.6} x="70%" icon="♩" />
-      <FloatingNote delay={2}   x="85%" icon="♪" />
+      <FloatingNote delay={2} x="85%" icon="♪" />
       <FloatingNote delay={1.8} x="50%" icon="♬" />
 
       <div className="mx-auto max-w-4xl px-4">
@@ -176,15 +176,15 @@ export function SpotifyPageContent() {
           {/* ── Now Playing ──────────────────────────────────────────────── */}
           <div ref={nowPlayingRef} className="w-full max-w-lg">
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={nowPlayingInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, ease: EASE }}
-            >
-              {/* Label */}
-              <motion.div
-                initial={{ opacity: 0, x: -16 }}
-                animate={nowPlayingInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.07, ease: EASE }}
+  initial={{ opacity: 0, y: 16 }}
+  animate={nowPlayingInView ? { opacity: 1, y: 0 } : {}}
+  transition={{ duration: 0.2, ease: EASE }}
+  >
+  {/* Label */}
+  <motion.div
+  initial={{ opacity: 0, x: -10 }}
+  animate={nowPlayingInView ? { opacity: 1, x: 0 } : {}}
+  transition={{ duration: 0.2, delay: 0.03, ease: EASE }}
                 className="mb-4 flex items-center gap-3"
               >
                 <div className="flex items-center gap-2">
@@ -197,9 +197,9 @@ export function SpotifyPageContent() {
 
               {/* Card - image fades in after it loads */}
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={nowPlayingInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
+                transition={{ duration: 0.2, delay: 0.05, ease: EASE }}
                 className="relative overflow-hidden rounded-2xl border border-[#1DB954]/20 bg-card transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-[0_0_20px_rgba(29,185,84,0.08)]"
               >
                 <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -230,15 +230,15 @@ export function SpotifyPageContent() {
           {/* ── Recently Played ───────────────────────────────────────────── */}
           <div ref={recentRef} className="w-full max-w-lg">
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={recentInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, ease: EASE }}
+              transition={{ duration: 0.2, ease: EASE }}
             >
               {/* Label */}
               <motion.div
-                initial={{ opacity: 0, x: -16 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={recentInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.07, ease: EASE }}
+                transition={{ duration: 0.2, delay: 0.03, ease: EASE }}
                 className="mb-4 flex items-center gap-3"
               >
                 <div className="flex items-center gap-2">
@@ -251,9 +251,9 @@ export function SpotifyPageContent() {
 
               {/* Card */}
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={recentInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
+                transition={{ duration: 0.2, delay: 0.05, ease: EASE }}
                 className="relative overflow-hidden rounded-2xl border border-[#1DB954]/20 bg-card transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-[0_0_20px_rgba(29,185,84,0.08)]"
               >
                 <div className="pointer-events-none absolute inset-0 opacity-[0.03]"

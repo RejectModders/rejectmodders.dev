@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { Gamepad2, Clock, Play } from "lucide-react"
-import { EASE, DUR, PAGE_START, PAGE_STEP, SCROLL_STEP } from "@/lib/animation"
+import { EASE, EASE_BOUNCE, EASE_SMOOTH, DUR, DUR_SLOW, PAGE_START, PAGE_STEP, SCROLL_STEP } from "@/lib/animation"
 
 // Games that are fully rewritten and enabled - add game IDs here as they're rebuilt
 const ENABLED_GAMES: Set<string> = new Set(["snake", "tetris"])
@@ -147,16 +147,26 @@ export function GamesPageContent() {
           transition={{ duration: DUR, delay: PAGE_START, ease: EASE }}
           className="mb-10 text-center"
         >
-          <div className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-primary/20 bg-primary/5">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.15, delay: PAGE_START, ease: EASE }}
+            className="inline-flex items-center gap-2 mb-3 px-3 py-1 rounded-full border border-primary/20 bg-primary/5"
+          >
             <Gamepad2 className="h-3.5 w-3.5 text-primary" />
             <span className="font-mono text-xs text-primary">arcade</span>
-          </div>
+          </motion.div>
           <h1 className="font-mono text-5xl font-bold tracking-tight text-foreground mb-3">
             <span className="text-primary">Games</span>
           </h1>
-          <p className="text-muted-foreground font-mono text-sm">
+          <motion.p 
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: DUR, delay: PAGE_START + 0.05, ease: EASE }}
+            className="text-muted-foreground font-mono text-sm"
+          >
             {GAMES.length} games · all built in the browser · no installs
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Category tabs */}
@@ -205,15 +215,17 @@ export function GamesPageContent() {
                     key={id}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: DUR, delay: Math.min(i * SCROLL_STEP, 0.3), ease: EASE }}
+                    transition={{ duration: 0.2, delay: Math.min(i * 0.02, 0.15), ease: EASE }}
+                    whileHover={isEnabled ? { y: -3, scale: 1.01, transition: { duration: 0.1 } } : {}}
+                    whileTap={isEnabled ? { scale: 0.99 } : {}}
                     onMouseEnter={() => isEnabled && setHovered(id)}
                     onMouseLeave={() => setHovered(null)}
                     onClick={() => isEnabled && router.push(`/games/${id}`)}
                     className={[
                       "group relative rounded-2xl border border-border bg-card overflow-hidden",
-                      "transition-all duration-200",
+                      "transition-colors duration-200",
                       isEnabled
-                        ? "cursor-pointer hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_10%,transparent)]"
+                        ? "cursor-pointer hover:border-primary/40"
                         : "opacity-75",
                     ].join(" ")}
                   >

@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { Heart, MessageCircle, Github as GitHubIcon, Twitter, Globe, Youtube, User, Mail } from "lucide-react"
 import { GITHUB_REPO_URL } from "@/config/constants"
-import { EASE, DUR, PAGE_START, PAGE_STEP, SCROLL_STEP } from "@/lib/animation"
+import { EASE, EASE_BOUNCE, EASE_SMOOTH, DUR, DUR_SLOW, PAGE_START, PAGE_STEP, SCROLL_STEP } from "@/lib/animation"
 
 interface Friend {
   name: string
@@ -20,11 +20,11 @@ interface Friend {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 12 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: PAGE_START + PAGE_STEP * 4 + i * SCROLL_STEP, duration: DUR, ease: EASE },
+    transition: { delay: PAGE_START + PAGE_STEP * 3 + i * 0.02, duration: 0.2, ease: EASE },
   }),
 }
 
@@ -54,16 +54,25 @@ export function FriendsPageContent({ friends }: { friends: Friend[] }) {
       <div className="mx-auto max-w-5xl px-4">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 16 }} 
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: DUR, delay: PAGE_START, ease: EASE }}
           className="mb-12"
         >
-          <span className="font-mono text-sm text-primary">{'// friends'}</span>
+          <motion.span 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.15, delay: PAGE_START, ease: EASE }}
+            className="font-mono text-sm text-primary inline-block"
+          >
+            {'// friends'}
+          </motion.span>
           <h1 className="mt-2 text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             My <span className="text-gradient">People</span>
           </h1>
           <motion.p
-            initial={{ opacity: 0, y: 12 }} animate={isInView ? { opacity: 1, y: 0 } : {}}
+            initial={{ opacity: 0, y: 8 }} 
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: DUR, delay: PAGE_START + PAGE_STEP, ease: EASE }}
             className="mt-4 max-w-lg text-lg leading-relaxed text-muted-foreground"
           >
@@ -207,6 +216,8 @@ export function FriendsPageContent({ friends }: { friends: Friend[] }) {
                   variants={cardVariants}
                   initial="hidden"
                   animate={isInView ? "visible" : "hidden"}
+                  whileHover={{ y: -3, scale: 1.01, transition: { duration: 0.1 } }}
+                  whileTap={{ scale: 0.99 }}
                   className="card-hover group rounded-xl border border-border bg-card p-5"
                 >
                   <div className="mb-4 flex items-center gap-3">
