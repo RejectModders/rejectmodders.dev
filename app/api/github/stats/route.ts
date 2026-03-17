@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
-import { GITHUB_USERNAME, GITHUB_API_URL, CACHE_DURATION_PAGE, CACHE_DURATION_PAGE_MAX } from "@/config/constants"
+import { GITHUB_USERNAME, GITHUB_API_URL, CACHE_DURATION_API, CACHE_DURATION_API_STALE } from "@/config/constants"
 
-export const revalidate = 0
+export const revalidate = 600 // 10 minutes
 
 const ORGS = ["disutils", "vulnradar"]
 
@@ -11,7 +11,7 @@ export async function GET() {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
     }
-    const opts = { headers, next: { revalidate: CACHE_DURATION_PAGE, tags: ["github-stats"] } }
+    const opts = { headers, next: { revalidate: CACHE_DURATION_API, tags: ["github-stats"] } }
 
     const [user, userRepos, ...orgRepos] = await Promise.all([
       fetch(`${GITHUB_API_URL}/users/${GITHUB_USERNAME}`, opts).then(r => r.json()),
@@ -33,7 +33,7 @@ export async function GET() {
 
     return NextResponse.json(
       { public_repos: user.public_repos ?? 0, followers: user.followers ?? 0, stars },
-      { headers: { "Cache-Control": `public, s-maxage=${CACHE_DURATION_PAGE}, stale-while-revalidate=${CACHE_DURATION_PAGE_MAX}` } }
+      { headers: { "Cache-Control": `public, s-maxage=${CACHE_DURATION_API}, stale-while-revalidate=${CACHE_DURATION_API_STALE}` } }
     )
   } catch {
     return NextResponse.json({ public_repos: 0, followers: 0, stars: 0 }, { status: 500 })

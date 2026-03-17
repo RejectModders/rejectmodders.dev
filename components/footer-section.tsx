@@ -11,7 +11,7 @@ function StatusBadge() {
 	const [buildTime, setBuildTime] = useState<string | null>(null)
 
 	useEffect(() => {
-		fetch("/api/status")
+		fetch("/api/status", { cache: "no-store" })
 			.then(r => r.json())
 			.then(d => {
 				setStatus(d.status === "ok" ? "ok" : "error")
