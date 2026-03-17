@@ -13,7 +13,7 @@ interface GHStats { public_repos: number; followers: number; stars: number }
 function useGitHubStats() {
   const [stats, setStats] = useState<GHStats | null>(null)
   useEffect(() => {
-    fetch("/api/github/stats")
+    fetch("/api/github/stats", { cache: "no-store" })
       .then(r => r.json())
       .then(d => { if (d.public_repos !== undefined) setStats(d) })
       .catch(() => {})
@@ -39,7 +39,7 @@ interface GHEvent {
 function useGitHubEvents() {
   const [events, setEvents] = useState<GHEvent[]>([])
   useEffect(() => {
-    fetch("/api/github/activity")
+    fetch("/api/github/activity", { cache: "no-store" })
       .then(r => r.json())
       .then(d => { if (Array.isArray(d)) setEvents(d) })
       .catch(() => {})

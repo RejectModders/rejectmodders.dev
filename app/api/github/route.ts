@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { GITHUB_USERNAME, GITHUB_API_URL, CACHE_DURATION_API, CACHE_DURATION_API_STALE } from "@/config/constants"
 
 export const revalidate = 600 // 10 minutes
-export const dynamic = "force-dynamic"
 
 const ORGS = ["disutils", "vulnradar"]
 const SKIP = ["RejectModders", ".github", "LICENSE"]
